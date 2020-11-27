@@ -12,4 +12,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ConfigProperties {
     private NodeType nodeType;
     private String workingDir;
+
+    public enum NodeType {
+        PROXY, RING
+    }
 }
