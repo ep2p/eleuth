@@ -3,3 +3,4 @@ logging:
     com.github: debug
 config:
   nodeType: PROXY
+  workingDir: .
