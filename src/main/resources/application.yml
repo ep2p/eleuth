@@ -4,3 +4,6 @@ logging:
 config:
   nodeType: PROXY
   workingDir: .
+  keyGenerationThreads: 5
+  cn: ${random.uuid}.com
+  keyStorePass: password

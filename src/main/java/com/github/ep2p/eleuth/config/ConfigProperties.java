@@ -12,6 +12,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ConfigProperties {
     private NodeType nodeType;
     private String workingDir;
+    private String cn;
+    private String keyStorePass;
+    private int keyGenerationThreads;
 
     public enum NodeType {
         PROXY, RING
