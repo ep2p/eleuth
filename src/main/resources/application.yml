@@ -7,3 +7,10 @@ config:
   keyGenerationThreads: 5
   cn: ${random.uuid}.com
   keyStorePass: password
+node:
+  host: localhost
+  port: 8080
+  ssl: false
+row:
+  client:
+    enable: true
