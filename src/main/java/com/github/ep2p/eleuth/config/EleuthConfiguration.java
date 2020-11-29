@@ -11,7 +11,7 @@ import com.github.ep2p.encore.helper.KeyStoreWrapper;
 import com.github.ep2p.encore.key.CNGenerator;
 import com.github.ep2p.encore.key.PubHashUserId128Generator;
 import com.github.ep2p.encore.key.UserIdGenerator;
-import com.github.ep2p.kademlia.node.ExternalNode;
+import com.github.ep2p.kademlia.node.external.ExternalNode;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
