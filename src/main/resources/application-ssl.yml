@@ -1,0 +1,8 @@
+server:
+  ssl:
+    key-store-type: jks
+    key-alias: main
+    key-store: ${config.workingDir}/keystore.jks
+    key-password: ${config.keyStorePass}
+    key-store-password: ${config.keyStorePass}
+    enabled: true
