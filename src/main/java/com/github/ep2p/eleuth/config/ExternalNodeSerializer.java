@@ -9,13 +9,14 @@ import com.github.ep2p.kademlia.node.external.ExternalNode;
 import java.io.IOException;
 import java.math.BigInteger;
 
-public class ExternalNodeSerializer extends JsonSerializer<ExternalNode<BigInteger, ROWConnectionInfo>> {
+public class ExternalNodeSerializer extends JsonSerializer<ExternalNode> {
 
     @Override
-    public void serialize(ExternalNode<BigInteger, ROWConnectionInfo> externalNode, JsonGenerator jgen, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(ExternalNode externalNode, JsonGenerator jgen, SerializerProvider serializerProvider) throws IOException {
+        ExternalNode<BigInteger, ROWConnectionInfo> externalNode1 = (ExternalNode<BigInteger, ROWConnectionInfo>) externalNode;
         jgen.writeStartObject();
-        jgen.writeNumberField("id", externalNode.getId());
-        jgen.writeNumberField("distance", externalNode.getDistance());
+        jgen.writeNumberField("id", externalNode1.getId());
+        jgen.writeNumberField("distance", externalNode1.getDistance());
         jgen.writeObjectField("connectionInfo", externalNode.getConnectionInfo());
         jgen.writeEndObject();
     }
