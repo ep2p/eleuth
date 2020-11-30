@@ -21,7 +21,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
     }
 
     @Override
-    public PingAnswer ping(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> node) {
+    public PingAnswer<BigInteger> ping(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> node) {
         return null;
     }
 
