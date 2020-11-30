@@ -2,6 +2,7 @@ package com.github.ep2p.eleuth.config;
 
 import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.repository.EleuthKademliaRepository;
+import com.github.ep2p.eleuth.repository.Key;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.eleuth.service.row.ROWNodeConnectionApi;
 import com.github.ep2p.kademlia.node.KademliaNode;
@@ -28,7 +29,7 @@ public class KademliaConfiguration {
     }
 
     @Bean
-    public KademliaRepository<Integer,String> kademliaRepository(){
+    public KademliaRepository<Key,String> kademliaRepository(){
         return new EleuthKademliaRepository();
     }
 
