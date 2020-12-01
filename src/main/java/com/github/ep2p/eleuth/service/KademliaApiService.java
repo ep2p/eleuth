@@ -13,6 +13,7 @@ import com.github.ep2p.kademlia.node.KademliaSyncRepositoryNode;
 import com.github.ep2p.kademlia.node.Node;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -59,13 +60,27 @@ public class KademliaApiService {
         }
     }
 
-    public void onShutdownSignal(BasicRequest basicRequest){
+    public BasicResponse store(StoreRequest storeRequest){
         try {
-            validate(basicRequest.getCaller());
-            kademliaNode.onShutdownSignal(getNodeFromDto(basicRequest.getCaller().getData()));
+            validate(storeRequest.getCaller());
+            kademliaNode.onStoreRequest(getNodeFromDto(storeRequest.getCaller().getData()), getNodeFromDto(storeRequest.getRequester()), storeRequest.getKey(), storeRequest.getValue());
+            return new BasicResponse(this.nodeDto);
         } catch (InvalidSignatureException e) {
             log.error("Invalid signature of caller", e);
         }
+        return new BasicResponse();
+    }
+
+
+    public BasicResponse onShutdownSignal(BasicRequest basicRequest){
+        try {
+            validate(basicRequest.getCaller());
+            kademliaNode.onShutdownSignal(getNodeFromDto(basicRequest.getCaller().getData()));
+            return new BasicResponse(this.nodeDto);
+        } catch (InvalidSignatureException e) {
+            log.error("Invalid signature of caller", e);
+        }
+        return new BasicResponse();
     }
 
     public FindNodeResponse findNode(FindNodeRequest findNodeRequest){

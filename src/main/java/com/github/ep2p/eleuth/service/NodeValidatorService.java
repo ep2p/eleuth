@@ -7,6 +7,7 @@ import com.github.ep2p.eleuth.model.dto.kademlia.NodeDto;
 import com.github.ep2p.eleuth.util.Base64Util;
 import com.github.ep2p.encore.key.BytesPublicKeyGenerator;
 import com.github.ep2p.encore.key.UserIdGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -17,10 +18,11 @@ public class NodeValidatorService {
     private final UserIdGenerator<BigInteger> userIdGenerator;
     private final BytesPublicKeyGenerator bytesPublicKeyGenerator;
 
-    public NodeValidatorService(MessageSignatureService messageSignatureService, UserIdGenerator<BigInteger> userIdGenerator, BytesPublicKeyGenerator bytesPublicKeyGenerator) {
+    @Autowired
+    public NodeValidatorService(MessageSignatureService messageSignatureService, UserIdGenerator<BigInteger> userIdGenerator) {
         this.messageSignatureService = messageSignatureService;
         this.userIdGenerator = userIdGenerator;
-        this.bytesPublicKeyGenerator = bytesPublicKeyGenerator;
+        this.bytesPublicKeyGenerator = new BytesPublicKeyGenerator();
     }
 
     public boolean isValidRingNode(SignedData<NodeDto> signedNodeDto){

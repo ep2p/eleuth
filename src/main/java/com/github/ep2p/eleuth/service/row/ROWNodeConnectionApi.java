@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -35,19 +34,16 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
     private final RowConnectionPool rowConnectionPool;
     private final MessageSignatureService messageSignatureService;
     private final NodeValidatorService nodeValidatorService;
-    private final KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode;
     private SignedData<NodeDto> callerDto;
 
     @Autowired
-    public ROWNodeConnectionApi(RowConnectionPool rowConnectionPool, MessageSignatureService messageSignatureService, NodeValidatorService nodeValidatorService, KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode) {
+    public ROWNodeConnectionApi(RowConnectionPool rowConnectionPool, MessageSignatureService messageSignatureService, NodeValidatorService nodeValidatorService) {
         this.rowConnectionPool = rowConnectionPool;
         this.messageSignatureService = messageSignatureService;
         this.nodeValidatorService = nodeValidatorService;
-        this.kademliaNode = kademliaNode;
     }
 
-    @PostConstruct
-    private void init() {
+    public void init(KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode){
         this.callerDto = messageSignatureService.sign(NodeDto.builder()
                 .connection(kademliaNode.getConnectionInfo())
                 .id(kademliaNode.getId())

@@ -49,6 +49,7 @@ public class KademliaConfiguration {
             }
         }));
         node.start();
+        rowNodeConnectionApi.init(node);
         return node;
     }
 
