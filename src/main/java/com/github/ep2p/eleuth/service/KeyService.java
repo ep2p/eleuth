@@ -1,6 +1,7 @@
 package com.github.ep2p.eleuth.service;
 
 import com.github.ep2p.eleuth.config.ConfigProperties;
+import com.github.ep2p.eleuth.config.KeyGenerationConfig;
 import com.github.ep2p.encore.Generator;
 import com.github.ep2p.encore.key.ChallengedKeyGeneratorDecorator;
 import com.github.ep2p.encore.key.KeyGenerator;
@@ -33,11 +34,10 @@ public class KeyService {
         }
     }
 
-    //todo: update challenge zeros
     private int getChallengeZeros(){
         switch (configProperties.getNodeType()) {
             case RING:
-                return 2;
+                return KeyGenerationConfig.RING_CHALLANGE_INT;
         }
         return 1;
     }

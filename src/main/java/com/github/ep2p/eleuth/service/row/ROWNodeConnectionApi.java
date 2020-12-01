@@ -1,11 +1,12 @@
 package com.github.ep2p.eleuth.service.row;
 
-import com.fasterxml.jackson.databind.node.BigIntegerNode;
 import com.github.ep2p.eleuth.exception.InvalidSignatureException;
 import com.github.ep2p.eleuth.model.dto.GetRequest;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.dto.kademlia.*;
+import com.github.ep2p.eleuth.repository.Key;
 import com.github.ep2p.eleuth.service.MessageSignatureService;
+import com.github.ep2p.eleuth.service.NodeValidatorService;
 import com.github.ep2p.kademlia.connection.NodeConnectionApi;
 import com.github.ep2p.kademlia.exception.StoreException;
 import com.github.ep2p.kademlia.model.FindNodeAnswer;
@@ -33,13 +34,15 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWConnectionInfo> {
     private final RowConnectionPool rowConnectionPool;
     private final MessageSignatureService messageSignatureService;
+    private final NodeValidatorService nodeValidatorService;
     private final KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode;
     private SignedData<NodeDto> callerDto;
 
     @Autowired
-    public ROWNodeConnectionApi(RowConnectionPool rowConnectionPool, MessageSignatureService messageSignatureService, KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode) {
+    public ROWNodeConnectionApi(RowConnectionPool rowConnectionPool, MessageSignatureService messageSignatureService, NodeValidatorService nodeValidatorService, KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode) {
         this.rowConnectionPool = rowConnectionPool;
         this.messageSignatureService = messageSignatureService;
+        this.nodeValidatorService = nodeValidatorService;
         this.kademliaNode = kademliaNode;
     }
 
@@ -63,7 +66,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
                 @Override
                 public void onResponse(RowResponse<PingResponse> rowResponse) {
                     try {
-                        messageSignatureService.validate(rowResponse.getBody().getNode());
+                        validate(rowResponse.getBody().getNode());
                         responseAtomicAnswer.set(rowResponse.getBody().getPingAnswer());
                     } catch (InvalidSignatureException e) {
                         log.error("Could not validate signatures inside response", e);
@@ -149,7 +152,11 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
             rowConnectionPool.getClient(node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
-
+                    try {
+                        validate(rowResponse.getBody().getNode());
+                    } catch (InvalidSignatureException e) {
+                        log.error("Could not validate signatures inside response", e);
+                    }
                 }
 
                 @Override
@@ -171,7 +178,11 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
             rowConnectionPool.getClient(node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
-
+                    try {
+                        validate(rowResponse.getBody().getNode());
+                    } catch (InvalidSignatureException e) {
+                        log.error("Could not validate signatures inside response", e);
+                    }
                 }
 
                 @Override
@@ -194,7 +205,11 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
             rowConnectionPool.getClient(requester.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
-
+                    try {
+                        validate(rowResponse.getBody().getNode());
+                    } catch (InvalidSignatureException e) {
+                        log.error("Could not validate signatures inside response", e);
+                    }
                 }
 
                 @Override
@@ -218,7 +233,11 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
             rowConnectionPool.getClient(requester.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
-
+                    try {
+                        validate(rowResponse.getBody().getNode());
+                    } catch (InvalidSignatureException e) {
+                        log.error("Could not validate signatures inside response", e);
+                    }
                 }
 
                 @Override
@@ -231,9 +250,15 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         }
     }
 
-    private Integer getKey(Object k){
-        assert k instanceof Integer;
-        return (Integer) k;
+    private void validate(SignedData<NodeDto> signedData) throws InvalidSignatureException {
+        if (!nodeValidatorService.isValidRingNode(signedData)) {
+            throw new InvalidSignatureException();
+        }
+    }
+
+    private Key getKey(Object k){
+        assert k instanceof Key;
+        return (Key) k;
     }
 
     private String getValue(Object v){

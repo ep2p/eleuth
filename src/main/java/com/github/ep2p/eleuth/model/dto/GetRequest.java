@@ -2,6 +2,7 @@ package com.github.ep2p.eleuth.model.dto;
 
 import com.github.ep2p.eleuth.model.dto.kademlia.BasicRequest;
 import com.github.ep2p.eleuth.model.dto.kademlia.NodeDto;
+import com.github.ep2p.eleuth.repository.Key;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.kademlia.node.Node;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import java.math.BigInteger;
 @ToString
 public class GetRequest extends BasicRequest {
     private NodeDto requester;
-    private Integer key;
+    private Key key;
 
     public GetRequest(Node<BigInteger, ROWConnectionInfo> requester) {
     }

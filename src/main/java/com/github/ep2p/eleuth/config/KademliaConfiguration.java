@@ -40,14 +40,15 @@ public class KademliaConfiguration {
 
     @Bean("kademliaNode")
     @DependsOn({"rowNodeConnectionApi", "kademliaRepository", "rowConnectionInfo", "nodeInformation"})
-    public KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Integer, String> kademliaNode(ROWNodeConnectionApi rowNodeConnectionApi, ROWConnectionInfo rowConnectionInfo, KademliaRepository<Integer, String> kademliaRepository, NodeInformation nodeInformation){
-        KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Integer, String> node = new KademliaSyncRepositoryNode<>(nodeInformation.getId(), new BigIntegerRoutingTable<ROWConnectionInfo>(nodeInformation.getId()), rowNodeConnectionApi, rowConnectionInfo, kademliaRepository);
-        node.setKademliaNodeListener(new RedistributionKademliaNodeListener<BigInteger, ROWConnectionInfo, Integer, String>(true, new RedistributionKademliaNodeListener.ShutdownDistributionListener<BigInteger, ROWConnectionInfo>() {
+    public KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> kademliaNode(ROWNodeConnectionApi rowNodeConnectionApi, ROWConnectionInfo rowConnectionInfo, KademliaRepository<Key, String> kademliaRepository, NodeInformation nodeInformation){
+        KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> node = new KademliaSyncRepositoryNode<>(nodeInformation.getId(), new BigIntegerRoutingTable<ROWConnectionInfo>(nodeInformation.getId()), rowNodeConnectionApi, rowConnectionInfo, kademliaRepository);
+        node.setKademliaNodeListener(new RedistributionKademliaNodeListener<BigInteger, ROWConnectionInfo, Key, String>(true, new RedistributionKademliaNodeListener.ShutdownDistributionListener<BigInteger, ROWConnectionInfo>() {
             @Override
             public void onFinish(KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode) {
 
             }
         }));
+        node.start();
         return node;
     }
 
