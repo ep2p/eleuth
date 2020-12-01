@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BasicRequest {
-    private SignedData<NodeDto> caller;
+public class BasicResponse {
+    private SignedData<NodeDto> node;
 }

@@ -41,6 +41,11 @@ public class MessageSignatureService {
         this.validate(signedData, bytesPublicKeyGenerator.generate(Base64Util.decode(signedData.getPublicKey())));
     }
 
+    public <E extends Serializable> void validate(SignedData<E> signedData, String publicKey) throws InvalidSignatureException {
+        Assert.notNull(signedData.getPublicKey(), "Public key can not be null");
+        this.validate(signedData, bytesPublicKeyGenerator.generate(Base64Util.decode(publicKey)));
+    }
+
     public <E extends Serializable> void validate(SignedData<E> signedData, PublicKey publicKey) throws InvalidSignatureException {
         Assert.notNull(signedData.getSignature(), "Signature can not be null");
         Serializer<E> serializer = new Serializer<>();

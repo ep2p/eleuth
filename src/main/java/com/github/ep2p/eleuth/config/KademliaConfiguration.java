@@ -38,9 +38,9 @@ public class KademliaConfiguration {
         return new ROWConnectionInfo(nodeProperties.getHost(), nodeProperties.getPort(), nodeProperties.isSsl());
     }
 
-    @Bean
+    @Bean("kademliaNode")
     @DependsOn({"rowNodeConnectionApi", "kademliaRepository", "rowConnectionInfo", "nodeInformation"})
-    public KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Integer, String> kademliaSyncRepositoryNode(ROWNodeConnectionApi rowNodeConnectionApi, ROWConnectionInfo rowConnectionInfo, KademliaRepository<Integer, String> kademliaRepository, NodeInformation nodeInformation){
+    public KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Integer, String> kademliaNode(ROWNodeConnectionApi rowNodeConnectionApi, ROWConnectionInfo rowConnectionInfo, KademliaRepository<Integer, String> kademliaRepository, NodeInformation nodeInformation){
         KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Integer, String> node = new KademliaSyncRepositoryNode<>(nodeInformation.getId(), new BigIntegerRoutingTable<ROWConnectionInfo>(nodeInformation.getId()), rowNodeConnectionApi, rowConnectionInfo, kademliaRepository);
         node.setKademliaNodeListener(new RedistributionKademliaNodeListener<BigInteger, ROWConnectionInfo, Integer, String>(true, new RedistributionKademliaNodeListener.ShutdownDistributionListener<BigInteger, ROWConnectionInfo>() {
             @Override
