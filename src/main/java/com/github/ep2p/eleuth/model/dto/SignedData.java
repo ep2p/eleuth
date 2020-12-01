@@ -13,6 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class SignedData<E extends Serializable> implements Serializable {
     private E data;
+    private String publicKey;
     private String signature;
     private final boolean signed = true;
 }
