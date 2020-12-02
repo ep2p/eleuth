@@ -1,4 +1,4 @@
-package com.github.ep2p.eleuth.config;
+package com.github.ep2p.eleuth.config.serialization;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

@@ -3,7 +3,7 @@ package com.github.ep2p.eleuth.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.github.ep2p.eleuth.config.serialization.ExternalNodeModule;
 import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.service.KeyService;
 import com.github.ep2p.eleuth.service.KeyStoreService;
@@ -11,7 +11,6 @@ import com.github.ep2p.encore.helper.KeyStoreWrapper;
 import com.github.ep2p.encore.key.CNGenerator;
 import com.github.ep2p.encore.key.PubHashUserId128Generator;
 import com.github.ep2p.encore.key.UserIdGenerator;
-import com.github.ep2p.kademlia.node.external.ExternalNode;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -47,9 +46,7 @@ public class EleuthConfiguration {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         objectMapper.setDateFormat(dateFormat);
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(ExternalNode.class, new ExternalNodeSerializer());
-        objectMapper.registerModules(module);
+        objectMapper.registerModules(new ExternalNodeModule());
         return objectMapper;
     }
 
