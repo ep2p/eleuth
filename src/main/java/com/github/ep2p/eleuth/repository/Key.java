@@ -1,14 +1,14 @@
 package com.github.ep2p.eleuth.repository;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Key {
     private String value;
     private Type type;
@@ -27,7 +27,7 @@ public class Key {
         return Objects.hash(getValue(), getType());
     }
 
-    enum Type {
+    public enum Type {
         NODE_INFO, MESSAGE
     }
 }

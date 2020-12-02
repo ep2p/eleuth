@@ -3,7 +3,6 @@ package com.github.ep2p.eleuth.controller;
 import com.github.ep2p.eleuth.model.dto.GetRequest;
 import com.github.ep2p.eleuth.model.dto.kademlia.*;
 import com.github.ep2p.eleuth.service.KademliaApiService;
-import com.github.ep2p.kademlia.exception.NodeIsOfflineException;
 import lab.idioglossia.row.annotations.RowController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -71,7 +71,7 @@ public class ManagerController {
                     .type(Key.Type.MESSAGE)
                     .value(String.valueOf(key))
                     .build();
-            GetAnswer<Key, String> getAnswer = this.kademliaSyncRepositoryNode.get(builtKey, 10, TimeUnit.SECONDS);
+            GetAnswer<BigInteger, Key, String> getAnswer = this.kademliaSyncRepositoryNode.get(builtKey, 10, TimeUnit.SECONDS);
             return "Node #"+getAnswer.getNodeId() + " GOT DATA: " + getAnswer.getValue();
         } catch (GetException e) {
             e.printStackTrace();

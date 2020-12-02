@@ -13,5 +13,5 @@ import java.math.BigInteger;
 @NoArgsConstructor
 public class NodeDto implements Serializable {
     private BigInteger id;
-    private ROWConnectionInfo connection;
+    private ROWConnectionInfo connectionInfo;
 }

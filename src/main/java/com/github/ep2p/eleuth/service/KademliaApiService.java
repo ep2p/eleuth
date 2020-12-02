@@ -13,7 +13,6 @@ import com.github.ep2p.kademlia.node.KademliaSyncRepositoryNode;
 import com.github.ep2p.kademlia.node.Node;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -38,13 +37,13 @@ public class KademliaApiService {
     @PostConstruct
     public void init(){
         this.nodeDto = messageSignatureService.sign(NodeDto.builder()
-                .connection(kademliaNode.getConnectionInfo())
+                .connectionInfo(kademliaNode.getConnectionInfo())
                 .id(kademliaNode.getId())
                 .build(), true);
     }
 
     private Node<BigInteger, ROWConnectionInfo> getNodeFromDto(NodeDto nodeDto){
-        return new Node<BigInteger, ROWConnectionInfo>(nodeDto.getId(), nodeDto.getConnection(), new Date());
+        return new Node<BigInteger, ROWConnectionInfo>(nodeDto.getId(), nodeDto.getConnectionInfo(), new Date());
     }
 
     public PingResponse onPing(BasicRequest basicRequest){

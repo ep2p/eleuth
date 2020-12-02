@@ -45,14 +45,14 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     public void init(KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode){
         this.callerDto = messageSignatureService.sign(NodeDto.builder()
-                .connection(kademliaNode.getConnectionInfo())
+                .connectionInfo(kademliaNode.getConnectionInfo())
                 .id(kademliaNode.getId())
                 .build(), true);
     }
 
     @Override
     public PingAnswer<BigInteger> ping(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> node) {
-        RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.PUT, "/dht/ping", null, new BasicRequest(this.callerDto), new HashMap<>());
+        RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.PUT, "/ring/ping", null, new BasicRequest(this.callerDto), new HashMap<>());
 
         AtomicReference<PingAnswer<BigInteger>> responseAtomicAnswer = new AtomicReference<>(new PingAnswer<>(node.getId(), false));
         CountDownLatch latch = new CountDownLatch(1);
@@ -90,7 +90,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public void shutdownSignal(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> node) {
-        RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/dht/shutdown-signal", null, new BasicRequest(this.callerDto), new HashMap<>());
+        RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/shutdown-signal", null, new BasicRequest(this.callerDto), new HashMap<>());
         try {
             rowConnectionPool.getClient(node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
@@ -106,7 +106,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public FindNodeAnswer<BigInteger, ROWConnectionInfo> findNode(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> node, BigInteger nodeId) {
-        RowRequest<FindNodeRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/dht/find", null, new FindNodeRequest(this.callerDto, nodeId), new HashMap<>());
+        RowRequest<FindNodeRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/find", null, new FindNodeRequest(this.callerDto, nodeId), new HashMap<>());
         FindNodeAnswer<BigInteger, ROWConnectionInfo> defaultAnswer = new FindNodeAnswer<BigInteger, ROWConnectionInfo>(BigInteger.valueOf(0));
         defaultAnswer.setAlive(false);
         AtomicReference<FindNodeAnswer<BigInteger, ROWConnectionInfo>> responseAtomicAnswer = new AtomicReference<>(defaultAnswer);
@@ -121,8 +121,8 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
                 @Override
                 public void onError(Throwable throwable) {
+                    log.error("", throwable);
                     latch.countDown();
-
                 }
             });
         } catch (IOException e) {
@@ -143,7 +143,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         StoreRequest storeRequest = new StoreRequest(this.callerDto, requester);
         storeRequest.setKey(getKey(key));
         storeRequest.setValue(getValue(value));
-        RowRequest<StoreRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/dht/store", null, storeRequest, new HashMap<>());
+        RowRequest<StoreRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/store", null, storeRequest, new HashMap<>());
         try {
             rowConnectionPool.getClient(node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
@@ -169,7 +169,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
     public <K> void getRequest(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> requester, Node<BigInteger, ROWConnectionInfo> node, K key) {
         GetRequest getRequest = new GetRequest(this.callerDto, requester);
         getRequest.setKey(getKey(key));
-        RowRequest<GetRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/dht/get", null, getRequest, new HashMap<>());
+        RowRequest<GetRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/get", null, getRequest, new HashMap<>());
         try {
             rowConnectionPool.getClient(node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
@@ -196,7 +196,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         GetResultRequest getResultRequest = new GetResultRequest(this.callerDto);
         getResultRequest.setKey(getKey(key));
         getResultRequest.setValue(getValue(value));
-        RowRequest<GetResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/dht/get/result", null, getResultRequest, new HashMap<>());
+        RowRequest<GetResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/get/result", null, getResultRequest, new HashMap<>());
         try {
             rowConnectionPool.getClient(requester.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
@@ -210,8 +210,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
                 @Override
                 public void onError(Throwable throwable) {
-                    throwable.printStackTrace();
-                    log.error("Failed to send get results to " + requester.getId() );
+                    log.error("Failed to send get results to " + requester.getId(), throwable);
                 }
             });
         } catch (IOException e){
@@ -224,7 +223,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         StoreResultRequest storeResultRequest = new StoreResultRequest(this.callerDto);
         storeResultRequest.setKey(getKey(key));
         storeResultRequest.setSuccess(success);
-        RowRequest<StoreResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/dht/store/result", null, storeResultRequest, new HashMap<>());
+        RowRequest<StoreResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/store/result", null, storeResultRequest, new HashMap<>());
         try {
             rowConnectionPool.getClient(requester.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override

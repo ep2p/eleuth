@@ -35,10 +35,13 @@ public class RowConnectionPool {
         if(pool.containsKey(rowConnectionInfo.getFullAddress())){
             return pool.get(rowConnectionInfo.getFullAddress());
         }else {
-            RowClientConfig rowClientConfig = rowClientFactory.getRowClientConfig();
+            RowClientConfig<RowWebsocketSession> rowClientConfig = rowClientFactory.getRowClientConfig();
             rowClientConfig.setRowTransportListener(listener);
             rowClientConfig.setMessageConverter(new DefaultJacksonMessageConverter(objectMapper));
             rowClientConfig.setAddress(rowConnectionInfo.getFullAddress());
+            /*SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
+            sslEngineConfigurator.setHostVerificationEnabled(false);
+            rowClientConfig.getWebsocketConfig().setSslEngineConfigurator(sslEngineConfigurator);*/
             RestTemplateRowHttpClient restTemplateRowHttpClient = new RestTemplateRowHttpClient(rowConnectionInfo.getHttpAddress(), new RestTemplate(), objectMapper);
             RowClient rowClient = rowClientFactory.getRowClient(rowClientConfig, restTemplateRowHttpClient);
             rowClient.open();
