@@ -11,6 +11,7 @@ import lombok.*;
 @Builder
 @ToString
 public class ROWConnectionInfo implements ConnectionInfo {
+    private static final long serialVersionUID = 4405959614376713329L;
     private String address;
     private int port;
     private boolean ssl;

@@ -3,6 +3,7 @@ package com.github.ep2p.eleuth.config;
 import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.repository.EleuthKademliaRepository;
 import com.github.ep2p.eleuth.repository.Key;
+import com.github.ep2p.eleuth.repository.RoutingTableRepository;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.eleuth.service.row.ROWNodeConnectionApi;
 import com.github.ep2p.kademlia.node.KademliaNode;
@@ -17,6 +18,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
+import javax.annotation.PreDestroy;
+import java.io.IOException;
 import java.math.BigInteger;
 
 @Configuration
@@ -25,9 +28,12 @@ import java.math.BigInteger;
 @Slf4j
 public class KademliaConfiguration {
     private final NodeProperties nodeProperties;
+    private final RoutingTableRepository routingTableRepository;
+    private KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode;
 
-    public KademliaConfiguration(NodeProperties nodeProperties) {
+    public KademliaConfiguration(NodeProperties nodeProperties, RoutingTableRepository routingTableRepository) {
         this.nodeProperties = nodeProperties;
+        this.routingTableRepository = routingTableRepository;
         log.info("Node: "+ nodeProperties.toString());
     }
 
@@ -41,10 +47,19 @@ public class KademliaConfiguration {
         return new ROWConnectionInfo(nodeProperties.getHost(), nodeProperties.getPort(), nodeProperties.isSsl());
     }
 
+    @Bean("routingTable")
+    @DependsOn("nodeInformation")
+    public BigIntegerRoutingTable<ROWConnectionInfo> routingTable(NodeInformation nodeInformation){
+        if (routingTableRepository.exists()) {
+            return routingTableRepository.get();
+        }
+        return new BigIntegerRoutingTable<ROWConnectionInfo>(nodeInformation.getId());
+    }
+
     @Bean("kademliaNode")
-    @DependsOn({"rowNodeConnectionApi", "kademliaRepository", "rowConnectionInfo", "nodeInformation"})
-    public KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> kademliaNode(ROWNodeConnectionApi rowNodeConnectionApi, ROWConnectionInfo rowConnectionInfo, KademliaRepository<Key, String> kademliaRepository, NodeInformation nodeInformation){
-        KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> node = new KademliaSyncRepositoryNode<>(nodeInformation.getId(), new BigIntegerRoutingTable<ROWConnectionInfo>(nodeInformation.getId()), rowNodeConnectionApi, rowConnectionInfo, kademliaRepository);
+    @DependsOn({"rowNodeConnectionApi", "kademliaRepository", "rowConnectionInfo", "nodeInformation", "routingTable"})
+    public KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> kademliaNode(ROWNodeConnectionApi rowNodeConnectionApi, ROWConnectionInfo rowConnectionInfo, KademliaRepository<Key, String> kademliaRepository, NodeInformation nodeInformation, BigIntegerRoutingTable<ROWConnectionInfo> routingTable) throws IOException {
+        KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> node = new KademliaSyncRepositoryNode<>(nodeInformation.getId(), routingTable, rowNodeConnectionApi, rowConnectionInfo, kademliaRepository);
         node.setKademliaNodeListener(new EleuthKademliaNodeListenerDecorator(new RedistributionKademliaNodeListener<BigInteger, ROWConnectionInfo, Key, String>(true, new RedistributionKademliaNodeListener.ShutdownDistributionListener<BigInteger, ROWConnectionInfo>() {
             @Override
             public void onFinish(KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode) {
@@ -53,7 +68,16 @@ public class KademliaConfiguration {
         })));
         node.start();
         rowNodeConnectionApi.init(node);
+        this.kademliaNode = node;
         return node;
+    }
+
+    @PreDestroy
+    public void onDestroy(){
+        if(this.kademliaNode != null){
+            BigIntegerRoutingTable<ROWConnectionInfo> routingTable = (BigIntegerRoutingTable<ROWConnectionInfo>) this.kademliaNode.getRoutingTable();
+            routingTableRepository.store(routingTable);
+        }
     }
 
 }

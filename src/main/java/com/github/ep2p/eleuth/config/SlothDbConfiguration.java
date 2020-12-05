@@ -23,7 +23,7 @@ public class SlothDbConfiguration {
 
     @Bean
     public SlothStorage slothStorage() throws IOException {
-        return new SlothStorage(Path.combine(configProperties.getWorkingDir(), "sloth/") , 10, 20);
+        return new SlothStorage(Path.combine(configProperties.getWorkingDir(), "storage") + "/" , 10, 20);
     }
 
     @DependsOn("slothStorage")
