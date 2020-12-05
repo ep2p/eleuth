@@ -17,10 +17,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.env.Environment;
 
 import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Arrays;
 
 @Configuration
 @ConditionalOnProperty(prefix = "config", name = "nodeType", havingValue = "RING")
@@ -28,11 +30,13 @@ import java.math.BigInteger;
 @Slf4j
 public class KademliaConfiguration {
     private final NodeProperties nodeProperties;
+    private final Environment env;
     private final RoutingTableRepository routingTableRepository;
     private KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode;
 
-    public KademliaConfiguration(NodeProperties nodeProperties, RoutingTableRepository routingTableRepository) {
+    public KademliaConfiguration(NodeProperties nodeProperties, Environment env, RoutingTableRepository routingTableRepository) {
         this.nodeProperties = nodeProperties;
+        this.env = env;
         this.routingTableRepository = routingTableRepository;
         log.info("Node: "+ nodeProperties.toString());
     }
@@ -44,7 +48,7 @@ public class KademliaConfiguration {
 
     @Bean
     public ROWConnectionInfo rowConnectionInfo(){
-        return new ROWConnectionInfo(nodeProperties.getHost(), nodeProperties.getPort(), nodeProperties.isSsl());
+        return new ROWConnectionInfo(nodeProperties.getHost(), nodeProperties.getPort(), Arrays.asList(env.getActiveProfiles()).contains("ssl"));
     }
 
     @Bean("routingTable")
