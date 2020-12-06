@@ -12,6 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignedData<E extends Serializable> implements Serializable {
+    private static final long serialVersionUID = -5134312637473458058L;
     private E data;
     private String publicKey;
     private String signature;

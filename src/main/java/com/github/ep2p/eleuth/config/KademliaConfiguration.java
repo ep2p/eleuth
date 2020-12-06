@@ -29,26 +29,16 @@ import java.util.Arrays;
 @EnableConfigurationProperties({NodeProperties.class})
 @Slf4j
 public class KademliaConfiguration {
-    private final NodeProperties nodeProperties;
-    private final Environment env;
     private final RoutingTableRepository routingTableRepository;
     private KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode;
 
-    public KademliaConfiguration(NodeProperties nodeProperties, Environment env, RoutingTableRepository routingTableRepository) {
-        this.nodeProperties = nodeProperties;
-        this.env = env;
+    public KademliaConfiguration(RoutingTableRepository routingTableRepository) {
         this.routingTableRepository = routingTableRepository;
-        log.info("Node: "+ nodeProperties.toString());
     }
 
     @Bean
     public KademliaRepository<Key,String> kademliaRepository(){
         return new EleuthKademliaRepository();
-    }
-
-    @Bean
-    public ROWConnectionInfo rowConnectionInfo(){
-        return new ROWConnectionInfo(nodeProperties.getHost(), nodeProperties.getPort(), Arrays.asList(env.getActiveProfiles()).contains("ssl"));
     }
 
     @Bean("routingTable")

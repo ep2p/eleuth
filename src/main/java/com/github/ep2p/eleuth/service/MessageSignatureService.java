@@ -42,12 +42,12 @@ public class MessageSignatureService {
 
     public <E extends Serializable> void validate(SignedData<E> signedData) throws InvalidSignatureException {
         Assert.notNull(signedData.getPublicKey(), "Public key can not be null");
-        this.validate(signedData, signedData.getPublicKey());
+        this.validate(signedData, getPublicKey(signedData));
     }
 
     public <E extends Serializable> void validate(SignedData<E> signedData, String publicKey) throws InvalidSignatureException {
         Assert.notNull(signedData.getPublicKey(), "Public key can not be null");
-        this.validate(signedData, bytesPublicKeyGenerator.generate(Base64Util.decode(publicKey)));
+        this.validate(signedData, getPublicKey(publicKey));
     }
 
     public <E extends Serializable> void validate(SignedData<E> signedData, PublicKey publicKey) throws InvalidSignatureException {
@@ -65,6 +65,16 @@ public class MessageSignatureService {
         } catch (InvalidKeyException e) {
             throw new InvalidSignatureException(e);
         }
+    }
+
+    public PublicKey getPublicKey(SignedData<?> signedData){
+        Assert.notNull(signedData.getPublicKey(), "Public key can not be null");
+        return bytesPublicKeyGenerator.generate(Base64Util.decode(signedData.getPublicKey()));
+    }
+
+    public PublicKey getPublicKey(String encoded){
+        Assert.notNull(encoded, "Public key can not be null");
+        return bytesPublicKeyGenerator.generate(Base64Util.decode(encoded));
     }
 
 }

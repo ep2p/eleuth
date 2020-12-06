@@ -7,6 +7,7 @@ import com.github.ep2p.eleuth.config.serialization.ExternalNodeModule;
 import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.service.KeyService;
 import com.github.ep2p.eleuth.service.KeyStoreService;
+import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.encore.helper.KeyStoreWrapper;
 import com.github.ep2p.encore.key.CNGenerator;
 import com.github.ep2p.encore.key.PubHashUserId128Generator;
@@ -18,11 +19,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.env.Environment;
 
 import java.math.BigInteger;
 import java.security.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.TimeZone;
 
 @Configuration
@@ -30,11 +33,21 @@ import java.util.TimeZone;
 @EnableConfigurationProperties({ConfigProperties.class})
 public class EleuthConfiguration {
     private final ConfigProperties configProperties;
+    private final NodeProperties nodeProperties;
+    private final Environment env;
 
     @Autowired
-    public EleuthConfiguration(ConfigProperties configProperties) {
+    public EleuthConfiguration(ConfigProperties configProperties, NodeProperties nodeProperties, Environment env) {
         this.configProperties = configProperties;
+        this.nodeProperties = nodeProperties;
+        this.env = env;
         log.info("Configuration: "+ configProperties.toString());
+        log.info("Node Properties: "+ nodeProperties.toString());
+    }
+
+    @Bean
+    public ROWConnectionInfo rowConnectionInfo(){
+        return new ROWConnectionInfo(nodeProperties.getHost(), nodeProperties.getPort(), Arrays.asList(env.getActiveProfiles()).contains("ssl"));
     }
 
     @ConditionalOnMissingBean(ObjectMapper.class)
