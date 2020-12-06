@@ -30,7 +30,7 @@ import java.util.TimeZone;
 
 @Configuration
 @Log4j2
-@EnableConfigurationProperties({ConfigProperties.class})
+@EnableConfigurationProperties({ConfigProperties.class, NodeProperties.class})
 public class EleuthConfiguration {
     private final ConfigProperties configProperties;
     private final NodeProperties nodeProperties;

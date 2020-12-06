@@ -4,12 +4,14 @@ import com.github.ep2p.eleuth.model.dto.kademlia.*;
 import com.github.ep2p.eleuth.service.KademliaApiService;
 import lab.idioglossia.row.annotations.RowController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @RowController
+@ConditionalOnProperty(prefix = "config", name = "nodeType", havingValue = "RING")
 public class RingController {
     private final KademliaApiService kademliaApiService;
 

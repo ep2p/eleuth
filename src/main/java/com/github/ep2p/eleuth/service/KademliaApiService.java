@@ -12,6 +12,7 @@ import com.github.ep2p.kademlia.node.KademliaSyncRepositoryNode;
 import com.github.ep2p.kademlia.node.Node;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +20,7 @@ import java.math.BigInteger;
 import java.util.Date;
 
 @Service
+@ConditionalOnProperty(prefix = "config", name = "nodeType", havingValue = "RING")
 @Slf4j
 public class KademliaApiService {
     private final KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> kademliaNode;

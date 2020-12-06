@@ -12,6 +12,7 @@ import com.github.ep2p.kademlia.node.Node;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @Slf4j
 @Profile("manager")
+@ConditionalOnProperty(prefix = "config", name = "nodeType", havingValue = "RING")
 public class ManagerController {
     private final KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> kademliaSyncRepositoryNode;
 

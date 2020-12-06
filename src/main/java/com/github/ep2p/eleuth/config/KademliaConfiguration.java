@@ -13,7 +13,6 @@ import com.github.ep2p.kademlia.node.RedistributionKademliaNodeListener;
 import com.github.ep2p.kademlia.table.BigIntegerRoutingTable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -24,7 +23,6 @@ import java.math.BigInteger;
 
 @Configuration
 @ConditionalOnProperty(prefix = "config", name = "nodeType", havingValue = "RING")
-@EnableConfigurationProperties({NodeProperties.class})
 @Slf4j
 public class KademliaConfiguration {
     private final RoutingTableRepository routingTableRepository;
