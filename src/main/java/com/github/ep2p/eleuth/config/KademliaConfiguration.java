@@ -1,5 +1,6 @@
 package com.github.ep2p.eleuth.config;
 
+import com.github.ep2p.eleuth.config.annotation.ConditionalOnRing;
 import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.repository.EleuthKademliaRepository;
 import com.github.ep2p.eleuth.repository.Key;
@@ -22,7 +23,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 @Configuration
-@ConditionalOnProperty(prefix = "config", name = "nodeType", havingValue = "RING")
+@ConditionalOnRing
 @Slf4j
 public class KademliaConfiguration {
     private final RoutingTableRepository routingTableRepository;

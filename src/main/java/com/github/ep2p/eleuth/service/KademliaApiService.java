@@ -1,5 +1,6 @@
 package com.github.ep2p.eleuth.service;
 
+import com.github.ep2p.eleuth.config.annotation.ConditionalOnRing;
 import com.github.ep2p.eleuth.exception.InvalidSignatureException;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.dto.kademlia.*;
@@ -20,7 +21,7 @@ import java.math.BigInteger;
 import java.util.Date;
 
 @Service
-@ConditionalOnProperty(prefix = "config", name = "nodeType", havingValue = "RING")
+@ConditionalOnRing
 @Slf4j
 public class KademliaApiService {
     private final KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> kademliaNode;

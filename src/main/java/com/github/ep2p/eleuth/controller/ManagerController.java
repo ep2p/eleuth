@@ -1,5 +1,6 @@
 package com.github.ep2p.eleuth.controller;
 
+import com.github.ep2p.eleuth.config.annotation.ConditionalOnRing;
 import com.github.ep2p.eleuth.repository.Key;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.kademlia.exception.BootstrapException;
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @Slf4j
 @Profile("manager")
-@ConditionalOnProperty(prefix = "config", name = "nodeType", havingValue = "RING")
+@ConditionalOnRing
 public class ManagerController {
     private final KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> kademliaSyncRepositoryNode;
 

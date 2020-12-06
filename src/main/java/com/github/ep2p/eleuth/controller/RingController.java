@@ -1,5 +1,6 @@
 package com.github.ep2p.eleuth.controller;
 
+import com.github.ep2p.eleuth.config.annotation.ConditionalOnRing;
 import com.github.ep2p.eleuth.model.dto.kademlia.*;
 import com.github.ep2p.eleuth.service.KademliaApiService;
 import lab.idioglossia.row.annotations.RowController;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @RowController
-@ConditionalOnProperty(prefix = "config", name = "nodeType", havingValue = "RING")
+@ConditionalOnRing
 public class RingController {
     private final KademliaApiService kademliaApiService;
 
