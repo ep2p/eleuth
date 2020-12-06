@@ -1,6 +1,5 @@
 package com.github.ep2p.eleuth.controller;
 
-import com.github.ep2p.eleuth.model.dto.kademlia.GetRequest;
 import com.github.ep2p.eleuth.model.dto.kademlia.*;
 import com.github.ep2p.eleuth.service.KademliaApiService;
 import lab.idioglossia.row.annotations.RowController;

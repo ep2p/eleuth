@@ -1,6 +1,5 @@
 package com.github.ep2p.eleuth.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.encore.helper.Serializer;
 import com.github.ep2p.kademlia.table.BigIntegerRoutingTable;

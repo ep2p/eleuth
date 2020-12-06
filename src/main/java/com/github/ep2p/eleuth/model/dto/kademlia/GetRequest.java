@@ -1,8 +1,6 @@
 package com.github.ep2p.eleuth.model.dto.kademlia;
 
 import com.github.ep2p.eleuth.model.dto.SignedData;
-import com.github.ep2p.eleuth.model.dto.kademlia.BasicRequest;
-import com.github.ep2p.eleuth.model.dto.kademlia.NodeDto;
 import com.github.ep2p.eleuth.repository.Key;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.kademlia.node.Node;

@@ -9,7 +9,6 @@ import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.eleuth.util.Base64Util;
 import com.github.ep2p.encore.helper.KeyStoreWrapper;
-import com.github.ep2p.encore.helper.Serializer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

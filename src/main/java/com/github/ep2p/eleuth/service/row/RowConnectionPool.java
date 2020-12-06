@@ -1,7 +1,6 @@
 package com.github.ep2p.eleuth.service.row;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.ep2p.encore.helper.KeyStoreWrapper;
 import lab.idioglossia.row.client.RestTemplateRowHttpClient;
 import lab.idioglossia.row.client.RowClient;
 import lab.idioglossia.row.client.RowClientFactory;
