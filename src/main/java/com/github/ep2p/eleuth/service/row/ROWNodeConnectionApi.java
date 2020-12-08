@@ -1,6 +1,7 @@
 package com.github.ep2p.eleuth.service.row;
 
 import com.github.ep2p.eleuth.exception.InvalidSignatureException;
+import com.github.ep2p.eleuth.model.NodeType;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.dto.kademlia.*;
 import com.github.ep2p.eleuth.repository.Key;
@@ -46,6 +47,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         this.callerDto = messageSignatureService.sign(NodeDto.builder()
                 .connectionInfo(kademliaNode.getConnectionInfo())
                 .id(kademliaNode.getId())
+                .type(NodeType.RING)
                 .build(), true);
     }
 

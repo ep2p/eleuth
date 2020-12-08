@@ -1,8 +1,7 @@
 FROM openjdk:8-alpine
-RUN apk update && apk add maven
-RUN mkdir -p /opt/eleuth-node
+RUN apk update && apk add maven && apk add --no-cache tzdata
+RUN mkdir -p /opt/eleuth-node && mkdir /opt/data
 WORKDIR /opt/eleuth-node
-#CMD echo 192.168.1.3 myhost.com >> /etc/hosts; supervisord -n;
 COPY ./target/eleuth.jar /opt/eleuth-node/.
-
-ENTRYPOINT ["sh","-c", "java -jar eleuth.jar ${ARGS}"]
+ENV TZ UTC
+ENTRYPOINT ["sh","-c", "java -jar eleuth.jar ${ARGS} -Duser.timezone=UTC"]

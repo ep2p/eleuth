@@ -18,6 +18,7 @@ public class NodeInformationDto {
             NodeInfo data = new NodeInfo();
             data.setConnectionInfo(nodeDto.getConnectionInfo());
             data.setId(nodeDto.getId());
+            data.setType(nodeDto.getType());
             return data;
         }
         private String certificate;

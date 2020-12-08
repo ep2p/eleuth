@@ -1,5 +1,6 @@
 package com.github.ep2p.eleuth.config;
 
+import com.github.ep2p.eleuth.model.NodeType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,8 +16,4 @@ public class ConfigProperties {
     private String cn;
     private String keyStorePass;
     private int keyGenerationThreads;
-
-    public enum NodeType {
-        PROXY, RING
-    }
 }
