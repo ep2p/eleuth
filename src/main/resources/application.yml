@@ -14,9 +14,12 @@ node:
 row:
   client:
     enable: true
+    ws:
+      maximum-session-idle: 120000
   enable: true
   ws:
     enable: true
+    maximum-session-idle: 120000
 spring:
   h2:
     console:

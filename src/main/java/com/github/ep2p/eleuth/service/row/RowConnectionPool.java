@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RowConnectionPool {
     private final RowClientFactory rowClientFactory;
     private final SSLContext sslContext;
+    private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper;
     private final Map<String, RowClient> pool = new ConcurrentHashMap<>();
     private final Listener listener = new Listener();
@@ -44,7 +45,7 @@ public class RowConnectionPool {
             RowClientConfig<RowWebsocketSession> rowClientConfig = rowClientFactory.getRowClientConfig();
             configure(rowClientConfig);
             rowClientConfig.setAddress(rowConnectionInfo.getFullAddress());
-            RestTemplateRowHttpClient restTemplateRowHttpClient = new RestTemplateRowHttpClient(rowConnectionInfo.getHttpAddress(), new RestTemplate(), objectMapper);
+            RestTemplateRowHttpClient restTemplateRowHttpClient = new RestTemplateRowHttpClient(rowConnectionInfo.getHttpAddress(), restTemplate, objectMapper);
             RowClient rowClient = rowClientFactory.getRowClient(rowClientConfig, restTemplateRowHttpClient);
             rowClient.open();
             pool.put(rowConnectionInfo.getFullAddress(), rowClient);

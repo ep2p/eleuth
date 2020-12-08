@@ -76,7 +76,7 @@
 		<dependency>
 			<groupId>com.github.idioglossia</groupId>
 			<artifactId>row-client-starter</artifactId>
-			<version>1.0.4-RELEASE</version>
+			<version>1.0.5-RELEASE</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
