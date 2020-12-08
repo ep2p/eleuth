@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "node_informations", indexes = {
-        @Index(columnList = "receiver,creationDate")
+        @Index(columnList = "nodeId")
 })
 @Getter
 @Setter
