@@ -1,4 +1,4 @@
-package com.github.ep2p.eleuth.repository;
+package com.github.ep2p.eleuth.model.entity;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Key {
-    private String value;
+    private String id;
     private Type type;
 
     @Override
@@ -18,13 +18,13 @@ public class Key {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Key key = (Key) o;
-        return Objects.equals(getValue(), key.getValue()) &&
+        return Objects.equals(getId(), key.getId()) &&
                 getType() == key.getType();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getValue(), getType());
+        return Objects.hash(getId(), getType());
     }
 
     public enum Type {

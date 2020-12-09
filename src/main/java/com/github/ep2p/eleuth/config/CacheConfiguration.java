@@ -21,11 +21,39 @@ public class CacheConfiguration {
             @Override
             protected Cache createConcurrentMapCache(final String name) {
                 return new ConcurrentMapCache(name,
-                        CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).maximumSize(100).build().asMap(), false);
+                        CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).maximumSize(1000).build().asMap(), false);
             }
         };
 
         cacheManager.setCacheNames(Arrays.asList("availability", "data", "query"));
+        return cacheManager;
+    }
+
+    @Bean("repositoryCache")
+    public CacheManager repositoryCache() {
+        ConcurrentMapCacheManager cacheManager = new ConcurrentMapCacheManager() {
+            @Override
+            protected Cache createConcurrentMapCache(final String name) {
+                return new ConcurrentMapCache(name,
+                        CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).maximumSize(300).build().asMap(), false);
+            }
+        };
+
+        cacheManager.setCacheNames(Arrays.asList("repository"));
+        return cacheManager;
+    }
+
+    @Bean("signedNodeInformationCache")
+    public CacheManager signedNodeInformationCache() {
+        ConcurrentMapCacheManager cacheManager = new ConcurrentMapCacheManager() {
+            @Override
+            protected Cache createConcurrentMapCache(final String name) {
+                return new ConcurrentMapCache(name,
+                        CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).maximumSize(2).build().asMap(), false);
+            }
+        };
+
+        cacheManager.setCacheNames(Arrays.asList("publicKey", "certificate"));
         return cacheManager;
     }
 

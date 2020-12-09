@@ -1,7 +1,7 @@
 package com.github.ep2p.eleuth.controller;
 
 import com.github.ep2p.eleuth.config.annotation.ConditionalOnRing;
-import com.github.ep2p.eleuth.repository.Key;
+import com.github.ep2p.eleuth.model.entity.Key;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.kademlia.exception.BootstrapException;
 import com.github.ep2p.kademlia.exception.GetException;
@@ -13,7 +13,6 @@ import com.github.ep2p.kademlia.node.Node;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,7 +55,7 @@ public class ManagerController {
         try {
             Key builtKey = Key.builder()
                     .type(Key.Type.MESSAGE)
-                    .value(String.valueOf(managerStore.getKey()))
+                    .id(String.valueOf(managerStore.getKey()))
                     .build();
             StoreAnswer<BigInteger, Key> storeAnswer = this.kademliaSyncRepositoryNode.store(builtKey, managerStore.getValue(), 10, TimeUnit.SECONDS);
             return "Node #"+ storeAnswer.getNodeId() + " STORED DATA";
@@ -72,7 +71,7 @@ public class ManagerController {
         try {
             Key builtKey = Key.builder()
                     .type(Key.Type.MESSAGE)
-                    .value(String.valueOf(key))
+                    .id(String.valueOf(key))
                     .build();
             GetAnswer<BigInteger, Key, String> getAnswer = this.kademliaSyncRepositoryNode.get(builtKey, 10, TimeUnit.SECONDS);
             return "Node #"+getAnswer.getNodeId() + " GOT DATA: " + getAnswer.getValue();

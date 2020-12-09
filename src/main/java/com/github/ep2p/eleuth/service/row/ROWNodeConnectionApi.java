@@ -1,18 +1,17 @@
 package com.github.ep2p.eleuth.service.row;
 
 import com.github.ep2p.eleuth.exception.InvalidSignatureException;
-import com.github.ep2p.eleuth.model.NodeType;
 import com.github.ep2p.eleuth.model.dto.NodeDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.dto.kademlia.*;
-import com.github.ep2p.eleuth.repository.Key;
+import com.github.ep2p.eleuth.model.entity.Key;
 import com.github.ep2p.eleuth.service.MessageSignatureService;
 import com.github.ep2p.eleuth.service.NodeValidatorService;
+import com.github.ep2p.eleuth.service.SignedNodeDtoProviderService;
 import com.github.ep2p.kademlia.connection.NodeConnectionApi;
 import com.github.ep2p.kademlia.exception.StoreException;
 import com.github.ep2p.kademlia.model.FindNodeAnswer;
 import com.github.ep2p.kademlia.model.PingAnswer;
-import com.github.ep2p.kademlia.node.KademliaNode;
 import com.github.ep2p.kademlia.node.Node;
 import lab.idioglossia.row.client.RowClient;
 import lab.idioglossia.row.client.callback.ResponseCallback;
@@ -33,28 +32,20 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWConnectionInfo> {
     private final RowConnectionPool rowConnectionPool;
-    private final MessageSignatureService messageSignatureService;
+    private final SignedNodeDtoProviderService signedNodeDtoProviderService;
     private final NodeValidatorService nodeValidatorService;
-    private SignedData<NodeDto> callerDto;
 
     @Autowired
-    public ROWNodeConnectionApi(RowConnectionPool rowConnectionPool, MessageSignatureService messageSignatureService, NodeValidatorService nodeValidatorService) {
+    public ROWNodeConnectionApi(RowConnectionPool rowConnectionPool, SignedNodeDtoProviderService signedNodeDtoProviderService, NodeValidatorService nodeValidatorService) {
         this.rowConnectionPool = rowConnectionPool;
-        this.messageSignatureService = messageSignatureService;
+        this.signedNodeDtoProviderService = signedNodeDtoProviderService;
         this.nodeValidatorService = nodeValidatorService;
     }
 
-    public void init(KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode){
-        this.callerDto = messageSignatureService.sign(NodeDto.builder()
-                .connectionInfo(kademliaNode.getConnectionInfo())
-                .id(kademliaNode.getId())
-                .type(NodeType.RING)
-                .build(), true);
-    }
 
     @Override
     public PingAnswer<BigInteger> ping(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> node) {
-        RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.PUT, "/ring/ping", null, new BasicRequest(this.callerDto), new HashMap<>());
+        RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.PUT, "/ring/ping", null, new BasicRequest(signedNodeDtoProviderService.getWithCertificate()), new HashMap<>());
 
         AtomicReference<PingAnswer<BigInteger>> responseAtomicAnswer = new AtomicReference<>(new PingAnswer<>(node.getId(), false));
         CountDownLatch latch = new CountDownLatch(1);
@@ -92,7 +83,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public void shutdownSignal(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> node) {
-        RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/shutdown-signal", null, new BasicRequest(this.callerDto), new HashMap<>());
+        RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/shutdown-signal", null, new BasicRequest(signedNodeDtoProviderService.getWithCertificate()), new HashMap<>());
         try {
             rowConnectionPool.getClient(node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
@@ -108,7 +99,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public FindNodeAnswer<BigInteger, ROWConnectionInfo> findNode(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> node, BigInteger nodeId) {
-        RowRequest<FindNodeRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/find", null, new FindNodeRequest(this.callerDto, nodeId), new HashMap<>());
+        RowRequest<FindNodeRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/find", null, new FindNodeRequest(signedNodeDtoProviderService.getWithCertificate(), nodeId), new HashMap<>());
         FindNodeAnswer<BigInteger, ROWConnectionInfo> defaultAnswer = new FindNodeAnswer<BigInteger, ROWConnectionInfo>(BigInteger.valueOf(0));
         defaultAnswer.setAlive(false);
         AtomicReference<FindNodeAnswer<BigInteger, ROWConnectionInfo>> responseAtomicAnswer = new AtomicReference<>(defaultAnswer);
@@ -142,7 +133,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
     //not async yet
     @Override
     public <K, V> void storeAsync(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> requester, Node<BigInteger, ROWConnectionInfo> node, K key, V value) {
-        StoreRequest storeRequest = new StoreRequest(this.callerDto, requester);
+        StoreRequest storeRequest = new StoreRequest(signedNodeDtoProviderService.getWithCertificate(), requester);
         storeRequest.setKey(getKey(key));
         storeRequest.setValue(getValue(value));
         RowRequest<StoreRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/store", null, storeRequest, new HashMap<>());
@@ -169,7 +160,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public <K> void getRequest(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> requester, Node<BigInteger, ROWConnectionInfo> node, K key) {
-        GetRequest getRequest = new GetRequest(this.callerDto, requester);
+        GetRequest getRequest = new GetRequest(signedNodeDtoProviderService.getWithCertificate(), requester);
         getRequest.setKey(getKey(key));
         RowRequest<GetRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/get", null, getRequest, new HashMap<>());
         try {
@@ -195,7 +186,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public <K, V> void sendGetResults(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> requester, K key, V value) {
-        GetResultRequest getResultRequest = new GetResultRequest(this.callerDto);
+        GetResultRequest getResultRequest = new GetResultRequest(signedNodeDtoProviderService.getWithCertificate());
         getResultRequest.setKey(getKey(key));
         getResultRequest.setValue(getValue(value));
         RowRequest<GetResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/get/result", null, getResultRequest, new HashMap<>());
@@ -222,7 +213,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public <K> void sendStoreResults(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> requester, K key, boolean success) {
-        StoreResultRequest storeResultRequest = new StoreResultRequest(this.callerDto);
+        StoreResultRequest storeResultRequest = new StoreResultRequest(signedNodeDtoProviderService.getWithCertificate());
         storeResultRequest.setKey(getKey(key));
         storeResultRequest.setSuccess(success);
         RowRequest<StoreResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/store/result", null, storeResultRequest, new HashMap<>());

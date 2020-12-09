@@ -1,6 +1,6 @@
 package com.github.ep2p.eleuth.config;
 
-import com.github.ep2p.eleuth.repository.Key;
+import com.github.ep2p.eleuth.model.entity.Key;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.kademlia.exception.NodeIsOfflineException;
 import com.github.ep2p.kademlia.node.KademliaNode;
@@ -28,7 +28,7 @@ public class EleuthKademliaNodeListenerDecorator extends KademliaNodeListenerDec
     }
 
     @Override
-    public void onNewNodeAvailable(KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode, Node<BigInteger, ROWConnectionInfo> node) {
+    public synchronized void onNewNodeAvailable(KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode, Node<BigInteger, ROWConnectionInfo> node) {
         super.onNewNodeAvailable(kademliaNode, node);
         log.debug("New node available: " + node.getId());
     }

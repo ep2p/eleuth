@@ -1,6 +1,6 @@
 package com.github.ep2p.eleuth.service;
 
-import com.github.ep2p.eleuth.repository.Key;
+import com.github.ep2p.eleuth.model.entity.Key;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.kademlia.connection.NodeConnectionApi;
 import com.github.ep2p.kademlia.exception.StoreException;

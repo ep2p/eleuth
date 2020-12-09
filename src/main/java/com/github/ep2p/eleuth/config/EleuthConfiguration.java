@@ -98,12 +98,13 @@ public class EleuthConfiguration {
     }
 
     @Bean
-    @DependsOn({"keyStoreWrapper", "userIdGenerator"})
-    public NodeInformation nodeInformation(KeyStoreWrapper keyStoreWrapper, UserIdGenerator<BigInteger> userIdGenerator) throws KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException {
+    @DependsOn({"keyStoreWrapper", "userIdGenerator", "rowConnectionInfo"})
+    public NodeInformation nodeInformation(KeyStoreWrapper keyStoreWrapper, UserIdGenerator<BigInteger> userIdGenerator, ROWConnectionInfo rowConnectionInfo) throws KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException {
         KeyPair keyPair = keyStoreWrapper.getMainKeyPair();
         BigInteger nodeId = userIdGenerator.generate(keyPair.getPublic());
         log.info("Node ID: " + nodeId);
         return NodeInformation.builder()
+                .connectionInfo(rowConnectionInfo)
                 .id(nodeId)
                 .keyPair(keyPair)
                 .nodeType(configProperties.getNodeType())

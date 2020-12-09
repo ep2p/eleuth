@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -18,4 +19,18 @@ public class NodeDto implements Serializable {
     private ROWConnectionInfo connectionInfo;
     private NodeType type;
     private long timestamp;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NodeDto nodeDto = (NodeDto) o;
+        return Objects.equals(getId(), nodeDto.getId()) &&
+                getType() == nodeDto.getType();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getType());
+    }
 }

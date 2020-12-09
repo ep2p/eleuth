@@ -6,10 +6,10 @@ import com.github.ep2p.eleuth.util.Pipeline;
 
 import java.util.UUID;
 
-public class AvailabilityCacheStage implements Pipeline.Stage<AvailabilityMessage, AvailabilityOutput> {
+public class AvailabilityRequestCacheStage implements Pipeline.Stage<AvailabilityMessage, AvailabilityOutput> {
     private final RequestCacheService requestCacheService;
 
-    public AvailabilityCacheStage(RequestCacheService requestCacheService) {
+    public AvailabilityRequestCacheStage(RequestCacheService requestCacheService) {
         this.requestCacheService = requestCacheService;
     }
 
