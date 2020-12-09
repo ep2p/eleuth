@@ -66,12 +66,18 @@ public class KademliaApiService {
     public BasicResponse store(StoreRequest storeRequest){
         try {
             validate(storeRequest.getCaller());
+            validate(storeRequest);
             kademliaNode.onStoreRequest(getNodeFromDto(storeRequest.getCaller().getData()), getNodeFromDto(storeRequest.getRequester()), storeRequest.getKey(), storeRequest.getValue());
             return new BasicResponse(this.nodeDto);
         } catch (InvalidSignatureException e) {
             log.error("Invalid signature of caller", e);
         }
         return new BasicResponse();
+    }
+
+    //todo
+    private void validate(StoreRequest storeRequest) {
+
     }
 
 

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -28,6 +29,7 @@ public class AvailabilityMessage extends ProtocolMessage<AvailabilityMessage.Mes
         @NotNull
         private SignedData<AvailabilityMessageBody> body;
         private SignedData<NodeDto> route;
+        @Min(0)
         private int passes;
     }
 
