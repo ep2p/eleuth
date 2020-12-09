@@ -3,7 +3,7 @@ package com.github.ep2p.eleuth.service;
 import com.github.ep2p.eleuth.config.KeyGenerationConfig;
 import com.github.ep2p.eleuth.exception.InvalidSignatureException;
 import com.github.ep2p.eleuth.model.dto.SignedData;
-import com.github.ep2p.eleuth.model.dto.kademlia.NodeDto;
+import com.github.ep2p.eleuth.model.dto.NodeDto;
 import com.github.ep2p.eleuth.util.Base64Util;
 import com.github.ep2p.encore.key.BytesPublicKeyGenerator;
 import com.github.ep2p.encore.key.UserIdGenerator;

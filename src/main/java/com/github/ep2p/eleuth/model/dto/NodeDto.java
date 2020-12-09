@@ -1,4 +1,4 @@
-package com.github.ep2p.eleuth.model.dto.kademlia;
+package com.github.ep2p.eleuth.model.dto;
 
 import com.github.ep2p.eleuth.model.NodeType;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;

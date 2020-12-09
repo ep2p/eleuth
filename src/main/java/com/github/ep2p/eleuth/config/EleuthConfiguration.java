@@ -106,6 +106,7 @@ public class EleuthConfiguration {
         return NodeInformation.builder()
                 .id(nodeId)
                 .keyPair(keyPair)
+                .nodeType(configProperties.getNodeType())
                 .build();
     }
 }

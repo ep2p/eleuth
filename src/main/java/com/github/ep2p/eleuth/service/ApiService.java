@@ -4,7 +4,7 @@ import com.github.ep2p.eleuth.exception.InvalidSignatureException;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.dto.api.BaseResponse;
 import com.github.ep2p.eleuth.model.dto.api.NodeInformationDto;
-import com.github.ep2p.eleuth.model.dto.kademlia.NodeDto;
+import com.github.ep2p.eleuth.model.dto.NodeDto;
 import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.eleuth.util.Base64Util;
