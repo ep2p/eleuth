@@ -13,8 +13,9 @@ import java.math.BigInteger;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NodeDto implements Serializable {
-    private static final long serialVersionUID = -6942024790881488298L;
+    private static final long serialVersionUID = -3883150909228695481L;
     private BigInteger id;
     private ROWConnectionInfo connectionInfo;
     private NodeType type;
+    private long timestamp;
 }
