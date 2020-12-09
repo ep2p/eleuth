@@ -5,6 +5,7 @@ import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.repository.EleuthKademliaRepository;
 import com.github.ep2p.eleuth.repository.Key;
 import com.github.ep2p.eleuth.repository.RoutingTableLoader;
+import com.github.ep2p.eleuth.service.EleuthKademliaRepositoryNode;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.eleuth.service.row.ROWNodeConnectionApi;
 import com.github.ep2p.kademlia.node.KademliaNode;
@@ -51,7 +52,7 @@ public class KademliaConfiguration {
     @Bean("kademliaNode")
     @DependsOn({"rowNodeConnectionApi", "kademliaRepository", "rowConnectionInfo", "nodeInformation", "routingTable"})
     public KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> kademliaNode(ROWNodeConnectionApi rowNodeConnectionApi, ROWConnectionInfo rowConnectionInfo, KademliaRepository<Key, String> kademliaRepository, NodeInformation nodeInformation, BigIntegerRoutingTable<ROWConnectionInfo> routingTable) throws IOException {
-        KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> node = new KademliaSyncRepositoryNode<>(nodeInformation.getId(), routingTable, rowNodeConnectionApi, rowConnectionInfo, kademliaRepository);
+        KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> node = new EleuthKademliaRepositoryNode(nodeInformation.getId(), routingTable, rowNodeConnectionApi, rowConnectionInfo, kademliaRepository);
         node.setKademliaNodeListener(new EleuthKademliaNodeListenerDecorator(new RedistributionKademliaNodeListener<BigInteger, ROWConnectionInfo, Key, String>(true, new RedistributionKademliaNodeListener.ShutdownDistributionListener<BigInteger, ROWConnectionInfo>() {
             @Override
             public void onFinish(KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode) {
