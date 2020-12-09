@@ -1,5 +1,6 @@
 package com.github.ep2p.eleuth.model.dto.kademlia;
 
+import com.github.ep2p.eleuth.model.NodeType;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.repository.Key;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -26,7 +28,7 @@ public class StoreRequest extends BasicRequest {
     }
 
     public void setRequester(Node<BigInteger, ROWConnectionInfo> requester) {
-        this.requester = new NodeDto(requester.getId(), requester.getConnectionInfo());
+        this.requester = new NodeDto(requester.getId(), requester.getConnectionInfo(), NodeType.RING, new Date().getTime());
     }
 
     public StoreRequest() {
