@@ -8,6 +8,7 @@ import lab.idioglossia.row.client.callback.RowTransportListener;
 import lab.idioglossia.row.client.tyrus.RowClientConfig;
 import lab.idioglossia.row.client.util.DefaultJacksonMessageConverter;
 import lab.idioglossia.row.client.ws.RowWebsocketSession;
+import lab.idioglossia.row.client.ws.WebsocketSession;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.tyrus.client.SslEngineConfigurator;
@@ -69,17 +70,17 @@ public class RowConnectionPool {
 
     private class Listener extends RowTransportListener.Default {
         @Override
-        public void onOpen(RowWebsocketSession rowWebsocketSession) {
-
+        public void onOpen(WebsocketSession rowWebsocketSession) {
+            super.onOpen(rowWebsocketSession);
         }
 
         @Override
-        public void onError(RowWebsocketSession rowWebsocketSession, Throwable throwable) {
+        public void onError(WebsocketSession rowWebsocketSession, Throwable throwable) {
             log.error("Websocket error ", throwable);
         }
 
         @Override
-        public void onClose(RowClient rowClient, RowWebsocketSession rowWebsocketSession, CloseReason closeReason) {
+        public void onClose(RowClient rowClient, WebsocketSession rowWebsocketSession, CloseReason closeReason) {
             pool.remove(rowWebsocketSession.getUri().toString());
         }
     }

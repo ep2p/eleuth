@@ -16,7 +16,6 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class NodeConnectionEntity extends ROWConnectionInfo {
     private static final long serialVersionUID = 6585427476789728619L;
     @Id
@@ -25,4 +24,6 @@ public class NodeConnectionEntity extends ROWConnectionInfo {
     private BigInteger nodeId;
     private Date lastUpdate;
     private NodeType nodeType;
+    private String sessionId;
+    private String userId;
 }

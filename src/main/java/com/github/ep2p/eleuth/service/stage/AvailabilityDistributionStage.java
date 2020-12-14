@@ -35,7 +35,7 @@ public class AvailabilityDistributionStage implements Pipeline.Stage<Availabilit
         availabilityMessage.getMessage().setRoute(signedData);
         applicationEventPublisher.publishEvent(AvailabilityPublishEvent.builder()
                 .availabilityMessage(availabilityMessage)
-                .nodes(nodeConnectionEntities)
+                .nodesToContact(nodeConnectionEntities)
                 .build());
         return true;
     }
