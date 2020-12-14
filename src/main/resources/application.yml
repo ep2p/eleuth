@@ -1,6 +1,6 @@
 logging:
   level:
-    com.github: debug
+    com.github.ep2p: debug
 config:
   nodeType: PROXY
   workingDir: .
@@ -16,6 +16,7 @@ row:
     enable: true
     ws:
       maximum-session-idle: 120000
+    type: spring
   enable: true
   ws:
     enable: true
