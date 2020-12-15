@@ -50,7 +50,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         AtomicReference<PingAnswer<BigInteger>> responseAtomicAnswer = new AtomicReference<>(new PingAnswer<>(node.getId(), false));
         CountDownLatch latch = new CountDownLatch(1);
         try {
-            RowClient client = rowConnectionPool.getClient(node.getConnectionInfo());
+            RowClient client = rowConnectionPool.getClient(node.getId().toString(), node.getConnectionInfo());
             client.sendRequest(request, new ResponseCallback<PingResponse>(PingResponse.class) {
                 @Override
                 public void onResponse(RowResponse<PingResponse> rowResponse) {
@@ -85,7 +85,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
     public void shutdownSignal(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> node) {
         RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/shutdown-signal", null, new BasicRequest(signedNodeDtoProviderService.getWithCertificate()), new HashMap<>());
         try {
-            rowConnectionPool.getClient(node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
+            rowConnectionPool.getClient(node.getId().toString(), node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {}
 
@@ -105,7 +105,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         AtomicReference<FindNodeAnswer<BigInteger, ROWConnectionInfo>> responseAtomicAnswer = new AtomicReference<>(defaultAnswer);
         CountDownLatch latch = new CountDownLatch(1);
         try {
-            rowConnectionPool.getClient(node.getConnectionInfo()).sendRequest(request, new ResponseCallback<FindNodeResponse>(FindNodeResponse.class) {
+            rowConnectionPool.getClient(node.getId().toString(), node.getConnectionInfo()).sendRequest(request, new ResponseCallback<FindNodeResponse>(FindNodeResponse.class) {
                 @Override
                 public void onResponse(RowResponse<FindNodeResponse> rowResponse) {
                     responseAtomicAnswer.set(rowResponse.getBody().getAnswer());
@@ -138,7 +138,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         storeRequest.setValue(getValue(value));
         RowRequest<StoreRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/store", null, storeRequest, new HashMap<>());
         try {
-            rowConnectionPool.getClient(node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
+            rowConnectionPool.getClient(node.getId().toString(), node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
                     try {
@@ -164,7 +164,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         getRequest.setKey(getKey(key));
         RowRequest<GetRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/get", null, getRequest, new HashMap<>());
         try {
-            rowConnectionPool.getClient(node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
+            rowConnectionPool.getClient(node.getId().toString(), node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
                     try {
@@ -191,7 +191,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         getResultRequest.setValue(getValue(value));
         RowRequest<GetResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/get/result", null, getResultRequest, new HashMap<>());
         try {
-            rowConnectionPool.getClient(requester.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
+            rowConnectionPool.getClient(requester.getId().toString(), requester.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
                     try {
@@ -218,7 +218,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         storeResultRequest.setSuccess(success);
         RowRequest<StoreResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/store/result", null, storeResultRequest, new HashMap<>());
         try {
-            rowConnectionPool.getClient(requester.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
+            rowConnectionPool.getClient(requester.getId().toString(), requester.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
                     try {
