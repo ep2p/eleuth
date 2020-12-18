@@ -1,4 +1,4 @@
-package com.github.ep2p.eleuth.service.stage;
+package com.github.ep2p.eleuth.model;
 
 import lombok.Builder;
 import lombok.Getter;

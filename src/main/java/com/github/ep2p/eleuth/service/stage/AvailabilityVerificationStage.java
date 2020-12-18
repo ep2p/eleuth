@@ -1,5 +1,6 @@
 package com.github.ep2p.eleuth.service.stage;
 
+import com.github.ep2p.eleuth.model.AvailabilityOutput;
 import com.github.ep2p.eleuth.model.dto.route.AvailabilityMessage;
 import com.github.ep2p.eleuth.model.dto.route.ProtocolMessage;
 import com.github.ep2p.eleuth.service.MessageSignatureService;

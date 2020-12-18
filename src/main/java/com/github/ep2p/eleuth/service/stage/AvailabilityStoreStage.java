@@ -2,6 +2,7 @@ package com.github.ep2p.eleuth.service.stage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.ep2p.eleuth.model.AvailabilityOutput;
 import com.github.ep2p.eleuth.model.dto.NodeDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.dto.route.AvailabilityMessage;
