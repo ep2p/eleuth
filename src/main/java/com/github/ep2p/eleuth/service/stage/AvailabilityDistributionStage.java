@@ -34,10 +34,10 @@ public class AvailabilityDistributionStage implements Pipeline.Stage<Availabilit
         SignedData<NodeDto> signedData = signedNodeDtoProviderService.getWithCertificate();
         availabilityMessage.getMessage().setPasses(availabilityMessage.getMessage().getPasses() + 1);
         availabilityMessage.getMessage().setRoute(signedData);
-        applicationEventPublisher.publishEvent(AvailabilityPublishEvent.builder()
-                .availabilityMessage(availabilityMessage)
-                .nodesToContact(nodeConnectionEntities)
-                .build());
+        AvailabilityPublishEvent availabilityPublishEvent = new AvailabilityPublishEvent(this);
+        availabilityPublishEvent.setAvailabilityMessage(availabilityMessage);
+        availabilityPublishEvent.setNodesToContact(nodeConnectionEntities);
+        applicationEventPublisher.publishEvent(availabilityPublishEvent);
         return true;
     }
 
