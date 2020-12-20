@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface NodeConnectionRepository extends JpaRepository<NodeConnectionEntity, Integer> {
     List<NodeConnectionEntity> findAllByNodeTypeAndLastUpdateBefore(NodeType nodeType, Date date);
+    List<NodeConnectionEntity> findAllByRingId(BigInteger ringId);
     boolean existsByNodeId(BigInteger nodeId);
     NodeConnectionEntity findByNodeId(BigInteger nodeId);
 }

@@ -39,6 +39,9 @@ public class AvailabilityStoreStage implements Pipeline.Stage<AvailabilityMessag
                             .build(),
                             getValue(availabilityMessage)
                     );
+            if (!storeAnswer.getResult().equals(StoreAnswer.Result.STORED)) {
+                throw new StoreException();
+            }
         } catch (StoreException | JsonProcessingException e) {
             o.setFailed(true);
             o.getErrorMessages().add("Failed to store data");

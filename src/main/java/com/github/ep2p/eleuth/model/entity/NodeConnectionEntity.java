@@ -10,7 +10,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "node_connection", indexes = {
-        @Index(columnList = "nodeId")
+        @Index(columnList = "nodeId", unique = true),
+        @Index(columnList = "ringId")
 })
 @Getter
 @Setter
@@ -26,4 +27,5 @@ public class NodeConnectionEntity extends ROWConnectionInfo {
     private NodeType nodeType;
     private String sessionId;
     private String userId;
+    private BigInteger ringId;
 }
