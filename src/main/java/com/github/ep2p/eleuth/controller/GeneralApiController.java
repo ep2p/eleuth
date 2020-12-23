@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 //todo: this controller needs Spring Security
 @RestController
 @RequestMapping("/api")
-public class ApiController {
+public class GeneralApiController {
     private final ApiService apiService;
 
     @Autowired
-    public ApiController(ApiService apiService) {
+    public GeneralApiController(ApiService apiService) {
         this.apiService = apiService;
     }
 

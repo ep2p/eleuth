@@ -37,7 +37,7 @@ public class KeyService {
     private int getChallengeZeros(){
         switch (configProperties.getNodeType()) {
             case RING:
-                return KeyGenerationConfig.RING_CHALLANGE_INT;
+                return KeyGenerationConfig.RING_CHALLENGE_INT;
         }
         return 1;
     }

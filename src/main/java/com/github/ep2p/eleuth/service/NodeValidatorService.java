@@ -30,7 +30,7 @@ public class NodeValidatorService {
             messageSignatureService.validate(signedNodeDto);
             BigInteger bigInteger = signedNodeDto.getData().getId();
             return
-                    bigInteger.toString().endsWith(KeyGenerationConfig.RING_CHALLANGE_STR) &&
+                    bigInteger.toString().endsWith(KeyGenerationConfig.RING_CHALLENGE_STR) &&
                     userIdGenerator.generate(bytesPublicKeyGenerator.generate(Base64Util.decode(signedNodeDto.getPublicKey()))).equals(bigInteger);
         } catch (InvalidSignatureException e) {
             return false;
