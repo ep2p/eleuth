@@ -1,6 +1,7 @@
 package com.github.ep2p.eleuth.service;
 
 import com.github.ep2p.eleuth.model.entity.RingMemberEntity;
+import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.repository.RingMemberRepository;
 import com.github.ep2p.eleuth.util.Base64Util;
 import com.github.ep2p.encore.key.*;
@@ -21,9 +22,11 @@ public class RingKeyService {
     private final RingKeyGenerator ringKeyGenerator;
     private volatile boolean requested = true;
     private final RingMemberRepository ringMemberRepository;
+    private final NodeInformation nodeInformation;
 
-    public RingKeyService(UserIdGenerator<BigInteger> userIdGenerator, RingMemberRepository ringMemberRepository) {
+    public RingKeyService(UserIdGenerator<BigInteger> userIdGenerator, RingMemberRepository ringMemberRepository, NodeInformation nodeInformation) {
         this.ringMemberRepository = ringMemberRepository;
+        this.nodeInformation = nodeInformation;
         KeyGenerator keyGenerator = new KeyGenerator();
         ChallengedKeyGeneratorDecorator challengedKeyGeneratorDecorator = new ChallengedKeyGeneratorDecorator(keyGenerator, RING_CHALLENGE_INT, userIdGenerator);
         UserIdGenerator<String> userIdPartial128Generator = new PubHashUserIdPartial128Generator(PARTIAL_RING_KEY_PART_SIZE);
@@ -34,6 +37,7 @@ public class RingKeyService {
     public void importMembership(RingMemberEntity ringMemberEntity){
         ringMemberEntity.setPartial(true);
         ringMemberRepository.save(ringMemberEntity);
+        nodeInformation.setRingKey(ringMemberEntity.getKey());
     }
 
     public RingMemberEntity exportPart(int p){
@@ -80,6 +84,7 @@ public class RingKeyService {
                         .key(ringKey.getKey())
                         .keys(list)
                         .build());
+                nodeInformation.setRingKey(ringKey.getKey());
                 log.info("Successfully saved ring keys");
             }
         }).start();

@@ -5,6 +5,7 @@ import com.github.ep2p.eleuth.exception.InvalidSignatureException;
 import com.github.ep2p.eleuth.model.dto.RingMemberProofDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.dto.NodeDto;
+import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.util.Base64Util;
 import com.github.ep2p.encore.helper.ChallengedRingKeyVerifierWrapper;
 import com.github.ep2p.encore.helper.DefaultRingKeyVerifier;
@@ -25,11 +26,13 @@ public class NodeValidatorService {
     private final UserIdGenerator<BigInteger> userIdGenerator;
     private final BytesPublicKeyGenerator bytesPublicKeyGenerator;
     private final RingKeyVerifier ringKeyVerifier;
+    private final NodeInformation nodeInformation;
 
     @Autowired
-    public NodeValidatorService(MessageSignatureService messageSignatureService, UserIdGenerator<BigInteger> userIdGenerator) {
+    public NodeValidatorService(MessageSignatureService messageSignatureService, UserIdGenerator<BigInteger> userIdGenerator, NodeInformation nodeInformation) {
         this.messageSignatureService = messageSignatureService;
         this.userIdGenerator = userIdGenerator;
+        this.nodeInformation = nodeInformation;
         this.bytesPublicKeyGenerator = new BytesPublicKeyGenerator();
         ringKeyVerifier = new ChallengedRingKeyVerifierWrapper(KeyGenerationConfig.RING_CHALLENGE_INT, new DefaultRingKeyVerifier(new PubHashUserIdPartial128Generator(PARTIAL_RING_KEY_PART_SIZE)),userIdGenerator);
     }

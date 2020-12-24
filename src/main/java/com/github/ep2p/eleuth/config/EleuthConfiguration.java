@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.ep2p.eleuth.config.serialization.ExternalNodeModule;
+import com.github.ep2p.eleuth.model.entity.RingMemberEntity;
 import com.github.ep2p.eleuth.node.NodeInformation;
+import com.github.ep2p.eleuth.repository.RingMemberRepository;
 import com.github.ep2p.eleuth.service.KeyService;
 import com.github.ep2p.eleuth.service.KeyStoreService;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
@@ -35,12 +37,14 @@ public class EleuthConfiguration {
     private final ConfigProperties configProperties;
     private final NodeProperties nodeProperties;
     private final Environment env;
+    private final RingMemberRepository ringMemberRepository;
 
     @Autowired
-    public EleuthConfiguration(ConfigProperties configProperties, NodeProperties nodeProperties, Environment env) {
+    public EleuthConfiguration(ConfigProperties configProperties, NodeProperties nodeProperties, Environment env, RingMemberRepository ringMemberRepository) {
         this.configProperties = configProperties;
         this.nodeProperties = nodeProperties;
         this.env = env;
+        this.ringMemberRepository = ringMemberRepository;
         log.info("Configuration: "+ configProperties.toString());
         log.info("Node Properties: "+ nodeProperties.toString());
     }
@@ -102,11 +106,14 @@ public class EleuthConfiguration {
     public NodeInformation nodeInformation(KeyStoreWrapper keyStoreWrapper, UserIdGenerator<BigInteger> userIdGenerator, ROWConnectionInfo rowConnectionInfo) throws KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException {
         KeyPair keyPair = keyStoreWrapper.getMainKeyPair();
         BigInteger nodeId = userIdGenerator.generate(keyPair.getPublic());
+        RingMemberEntity ringMemberEntity = this.ringMemberRepository.get();
+        String ringKey = ringMemberEntity != null ? ringMemberEntity.getKey() : null;
         log.info("Node ID: " + nodeId);
         return NodeInformation.builder()
                 .connectionInfo(rowConnectionInfo)
                 .id(nodeId)
                 .keyPair(keyPair)
+                .ringKey(ringKey)
                 .nodeType(configProperties.getNodeType())
                 .build();
     }

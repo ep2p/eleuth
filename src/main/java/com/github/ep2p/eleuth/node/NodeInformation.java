@@ -18,4 +18,5 @@ public class NodeInformation {
     private BigInteger id;
     private KeyPair keyPair;
     private NodeType nodeType;
+    private volatile String ringKey;
 }
