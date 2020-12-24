@@ -1,6 +1,7 @@
 package com.github.ep2p.eleuth.model.dto.kademlia;
 
 import com.github.ep2p.eleuth.model.dto.NodeDto;
+import com.github.ep2p.eleuth.model.dto.RingMemberProofDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.kademlia.model.FindNodeAnswer;
@@ -14,8 +15,8 @@ import java.math.BigInteger;
 public class FindNodeResponse extends BasicResponse {
     private FindNodeAnswer<BigInteger, ROWConnectionInfo> answer;
 
-    public FindNodeResponse(SignedData<NodeDto> node, FindNodeAnswer<BigInteger, ROWConnectionInfo> answer) {
-        super(node);
+    public FindNodeResponse(SignedData<NodeDto> node, SignedData<RingMemberProofDto> membershipProof, FindNodeAnswer<BigInteger, ROWConnectionInfo> answer) {
+        super(node, membershipProof);
         this.answer = answer;
     }
 

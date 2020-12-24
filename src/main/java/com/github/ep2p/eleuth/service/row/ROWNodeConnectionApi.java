@@ -2,6 +2,7 @@ package com.github.ep2p.eleuth.service.row;
 
 import com.github.ep2p.eleuth.exception.InvalidSignatureException;
 import com.github.ep2p.eleuth.model.dto.NodeDto;
+import com.github.ep2p.eleuth.model.dto.RingMemberProofDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.dto.kademlia.*;
 import com.github.ep2p.eleuth.model.entity.Key;
@@ -57,7 +58,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
                 @Override
                 public void onResponse(RowResponse<PingResponse> rowResponse) {
                     try {
-                        validate(rowResponse.getBody().getNode());
+                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getMembershipProof());
                         responseAtomicAnswer.set(rowResponse.getBody().getPingAnswer());
                     } catch (InvalidSignatureException e) {
                         log.error("Could not validate signatures inside response", e);
@@ -144,7 +145,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
                     try {
-                        validate(rowResponse.getBody().getNode());
+                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getMembershipProof());
                     } catch (InvalidSignatureException e) {
                         log.error("Could not validate signatures inside response", e);
                     }
@@ -170,7 +171,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
                     try {
-                        validate(rowResponse.getBody().getNode());
+                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getMembershipProof());
                     } catch (InvalidSignatureException e) {
                         log.error("Could not validate signatures inside response", e);
                     }
@@ -197,7 +198,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
                     try {
-                        validate(rowResponse.getBody().getNode());
+                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getMembershipProof());
                     } catch (InvalidSignatureException e) {
                         log.error("Could not validate signatures inside response", e);
                     }
@@ -224,7 +225,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
                     try {
-                        validate(rowResponse.getBody().getNode());
+                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getMembershipProof());
                     } catch (InvalidSignatureException e) {
                         log.error("Could not validate signatures inside response", e);
                     }
@@ -240,8 +241,8 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         }
     }
 
-    private void validate(SignedData<NodeDto> signedData) throws InvalidSignatureException {
-        if (!nodeValidatorService.isValidRingNode(signedData)) {
+    private void validate(SignedData<NodeDto> signedData, SignedData<RingMemberProofDto> ringMemberProofDtoSignedData) throws InvalidSignatureException {
+        if (!nodeValidatorService.isValidRingNode(signedData, ringMemberProofDtoSignedData)) {
             throw new InvalidSignatureException();
         }
     }
