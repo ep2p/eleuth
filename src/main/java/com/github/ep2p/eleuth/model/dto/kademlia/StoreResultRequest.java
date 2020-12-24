@@ -1,6 +1,7 @@
 package com.github.ep2p.eleuth.model.dto.kademlia;
 
 import com.github.ep2p.eleuth.model.dto.NodeDto;
+import com.github.ep2p.eleuth.model.dto.RingMemberProofDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.entity.Key;
 import lombok.Getter;
@@ -12,8 +13,8 @@ public class StoreResultRequest extends BasicRequest {
     private Key key;
     private boolean success;
 
-    public StoreResultRequest(SignedData<NodeDto> node) {
-        super(node);
+    public StoreResultRequest(SignedData<NodeDto> node, SignedData<RingMemberProofDto> proof) {
+        super(node, proof);
     }
 
     public StoreResultRequest() {

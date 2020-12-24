@@ -2,6 +2,7 @@ package com.github.ep2p.eleuth.model.dto.kademlia;
 
 import com.github.ep2p.eleuth.model.NodeType;
 import com.github.ep2p.eleuth.model.dto.NodeDto;
+import com.github.ep2p.eleuth.model.dto.RingMemberProofDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.entity.Key;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
@@ -23,8 +24,8 @@ public class StoreRequest extends BasicRequest {
         setRequester(requester);
     }
 
-    public StoreRequest(SignedData<NodeDto> caller, Node<BigInteger, ROWConnectionInfo> requester) {
-        super(caller);
+    public StoreRequest(SignedData<NodeDto> caller, SignedData<RingMemberProofDto> proof, Node<BigInteger, ROWConnectionInfo> requester) {
+        super(caller, proof);
         setRequester(requester);
     }
 

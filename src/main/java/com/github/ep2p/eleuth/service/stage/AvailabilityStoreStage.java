@@ -9,7 +9,7 @@ import com.github.ep2p.eleuth.model.dto.route.AvailabilityMessage;
 import com.github.ep2p.eleuth.model.entity.Key;
 import com.github.ep2p.eleuth.model.entity.NodeInfoStoreValue;
 import com.github.ep2p.eleuth.service.EleuthKademliaRepositoryNode;
-import com.github.ep2p.eleuth.service.SignedNodeDtoProviderService;
+import com.github.ep2p.eleuth.service.provider.SignedNodeDtoProvider;
 import com.github.ep2p.eleuth.util.Pipeline;
 import com.github.ep2p.kademlia.exception.StoreException;
 import com.github.ep2p.kademlia.model.StoreAnswer;
@@ -21,12 +21,12 @@ import java.util.Arrays;
 @Slf4j
 public class AvailabilityStoreStage implements Pipeline.Stage<AvailabilityMessage, AvailabilityOutput> {
     private final EleuthKademliaRepositoryNode kademliaNode;
-    private final SignedNodeDtoProviderService signedNodeDtoProviderService;
+    private final SignedNodeDtoProvider signedNodeDtoProvider;
     private final ObjectMapper objectMapper;
 
-    public AvailabilityStoreStage(EleuthKademliaRepositoryNode kademliaNode, SignedNodeDtoProviderService signedNodeDtoProviderService, ObjectMapper objectMapper) {
+    public AvailabilityStoreStage(EleuthKademliaRepositoryNode kademliaNode, SignedNodeDtoProvider signedNodeDtoProvider, ObjectMapper objectMapper) {
         this.kademliaNode = kademliaNode;
-        this.signedNodeDtoProviderService = signedNodeDtoProviderService;
+        this.signedNodeDtoProvider = signedNodeDtoProvider;
         this.objectMapper = objectMapper;
     }
 
@@ -53,7 +53,7 @@ public class AvailabilityStoreStage implements Pipeline.Stage<AvailabilityMessag
 
     private String getValue(AvailabilityMessage availabilityMessage) throws JsonProcessingException {
         SignedData<NodeDto> route = availabilityMessage.getMessage().getRoute();
-        SignedData<NodeDto> route2 = signedNodeDtoProviderService.getWithCertificate();
+        SignedData<NodeDto> route2 = signedNodeDtoProvider.getWithCertificate();
         NodeInfoStoreValue nodeInfoStoreValue = new NodeInfoStoreValue(Arrays.asList(route, route2));
         return objectMapper.writeValueAsString(nodeInfoStoreValue);
     }

@@ -1,21 +1,22 @@
-package com.github.ep2p.eleuth.service;
+package com.github.ep2p.eleuth.service.provider;
 
 import com.github.ep2p.eleuth.model.NodeType;
 import com.github.ep2p.eleuth.model.dto.NodeDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.node.NodeInformation;
+import com.github.ep2p.eleuth.service.MessageSignatureService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
-public class SignedNodeDtoProviderService {
+public class SignedNodeDtoProvider {
     private final MessageSignatureService messageSignatureService;
     private final NodeInformation nodeInformation;
 
 
-    public SignedNodeDtoProviderService(MessageSignatureService messageSignatureService, NodeInformation nodeInformation) {
+    public SignedNodeDtoProvider(MessageSignatureService messageSignatureService, NodeInformation nodeInformation) {
         this.messageSignatureService = messageSignatureService;
         this.nodeInformation = nodeInformation;
     }

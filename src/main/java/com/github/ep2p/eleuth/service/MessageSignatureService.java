@@ -9,6 +9,7 @@ import com.github.ep2p.encore.helper.KeyStoreWrapper;
 import com.github.ep2p.encore.helper.MessageSigner;
 import com.github.ep2p.encore.helper.Serializer;
 import com.github.ep2p.encore.helper.SignatureVerifier;
+import com.github.ep2p.encore.key.BytesPrivateKeyGenerator;
 import com.github.ep2p.encore.key.BytesPublicKeyGenerator;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.Serializable;
 import java.security.InvalidKeyException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 
@@ -27,9 +29,12 @@ public class MessageSignatureService {
     private final NodeInformation nodeInformation;
     private final ObjectMapper objectMapper;
     private final KeyStoreWrapper keyStoreWrapper;
+    private final Serializer<String> serializer = new Serializer<>();
+
     private String encodedCertificate;
 
     private final BytesPublicKeyGenerator bytesPublicKeyGenerator = new BytesPublicKeyGenerator();
+    private final BytesPrivateKeyGenerator bytesPrivateKeyGenerator = new BytesPrivateKeyGenerator();
 
     public MessageSignatureService(NodeInformation nodeInformation, ObjectMapper objectMapper, KeyStoreWrapper keyStoreWrapper) {
         this.nodeInformation = nodeInformation;
@@ -47,19 +52,28 @@ public class MessageSignatureService {
 
     @SneakyThrows
     public <E extends Serializable> SignedData<E> signWithCertificate(E input) {
-        Serializer<String> serializer = new Serializer<>();
-        String valueAsString = objectMapper.writeValueAsString(input);
-        byte[] serializedData = serializer.serialize(valueAsString);
+        byte[] serializedData = getSerializedValue(input);
         byte[] sign = messageSigner.sign(serializedData);
         return new SignedData<>(input, null, Base64Util.encode(sign), encodedCertificate);
+    }
+
+    @SneakyThrows
+    public <E extends Serializable> SignedData<E> sign(E input, String privateKey, String publicKey){
+        return this.sign(input, bytesPrivateKeyGenerator.generate(Base64Util.decode(privateKey)), publicKey != null ? bytesPublicKeyGenerator.generate(Base64Util.decode(publicKey)) : null);
+    }
+
+    @SneakyThrows
+    public <E extends Serializable> SignedData<E> sign(E input, PrivateKey privateKey, PublicKey publicKey){
+        byte[] serializedData = getSerializedValue(input);
+        MessageSigner messageSigner = new MessageSigner(privateKey);
+        byte[] sign = messageSigner.sign(serializedData);
+        return new SignedData<E>(input, publicKey != null ? Base64Util.encode(publicKey.getEncoded()) : null, Base64Util.encode(sign));
     }
 
 
     @SneakyThrows
     public <E extends Serializable> SignedData<E> sign(E input, boolean includePublicKey){
-        Serializer<String> serializer = new Serializer<>();
-        String valueAsString = objectMapper.writeValueAsString(input);
-        byte[] serializedData = serializer.serialize(valueAsString);
+        byte[] serializedData = getSerializedValue(input);
         byte[] sign = messageSigner.sign(serializedData);
         return new SignedData<E>(input, includePublicKey ? Base64Util.encode(nodeInformation.getKeyPair().getPublic().getEncoded()) : null, Base64Util.encode(sign));
     }
@@ -102,6 +116,13 @@ public class MessageSignatureService {
     public PublicKey getPublicKey(String encoded){
         Assert.notNull(encoded, "Public key can not be null");
         return bytesPublicKeyGenerator.generate(Base64Util.decode(encoded));
+    }
+
+
+    @SneakyThrows
+    private <E extends Serializable> byte[] getSerializedValue(E input){
+        String valueAsString = objectMapper.writeValueAsString(input);
+        return serializer.serialize(valueAsString);
     }
 
 }

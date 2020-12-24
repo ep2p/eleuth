@@ -8,7 +8,7 @@ import com.github.ep2p.eleuth.model.dto.route.AvailabilityMessage;
 import com.github.ep2p.eleuth.model.entity.NodeConnectionEntity;
 import com.github.ep2p.eleuth.model.event.AvailabilityPublishEvent;
 import com.github.ep2p.eleuth.repository.NodeConnectionRepository;
-import com.github.ep2p.eleuth.service.SignedNodeDtoProviderService;
+import com.github.ep2p.eleuth.service.provider.SignedNodeDtoProvider;
 import com.github.ep2p.eleuth.util.Pipeline;
 import org.springframework.context.ApplicationEventPublisher;
 
@@ -21,12 +21,12 @@ import java.util.TimeZone;
 public class AvailabilityDistributionStage implements Pipeline.Stage<AvailabilityMessage, AvailabilityOutput> {
     private final NodeConnectionRepository nodeConnectionRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final SignedNodeDtoProviderService signedNodeDtoProviderService;
+    private final SignedNodeDtoProvider signedNodeDtoProvider;
 
-    public AvailabilityDistributionStage(NodeConnectionRepository nodeConnectionRepository, ApplicationEventPublisher applicationEventPublisher, SignedNodeDtoProviderService signedNodeDtoProviderService) {
+    public AvailabilityDistributionStage(NodeConnectionRepository nodeConnectionRepository, ApplicationEventPublisher applicationEventPublisher, SignedNodeDtoProvider signedNodeDtoProvider) {
         this.nodeConnectionRepository = nodeConnectionRepository;
         this.applicationEventPublisher = applicationEventPublisher;
-        this.signedNodeDtoProviderService = signedNodeDtoProviderService;
+        this.signedNodeDtoProvider = signedNodeDtoProvider;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class AvailabilityDistributionStage implements Pipeline.Stage<Availabilit
         if(nodeConnectionEntities.size() == 0){
             nodeConnectionEntities = getRecentAliveNodes();
         }
-        SignedData<NodeDto> signedData = signedNodeDtoProviderService.getWithCertificate();
+        SignedData<NodeDto> signedData = signedNodeDtoProvider.getWithCertificate();
         availabilityMessage.getMessage().setPasses(availabilityMessage.getMessage().getPasses() + 1);
         availabilityMessage.getMessage().setRoute(signedData);
         AvailabilityPublishEvent availabilityPublishEvent = new AvailabilityPublishEvent(this);

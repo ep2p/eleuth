@@ -9,7 +9,7 @@ import com.github.ep2p.eleuth.repository.NodeConnectionRepository;
 import com.github.ep2p.eleuth.service.EleuthKademliaRepositoryNode;
 import com.github.ep2p.eleuth.service.MessageSignatureService;
 import com.github.ep2p.eleuth.service.RequestCacheService;
-import com.github.ep2p.eleuth.service.SignedNodeDtoProviderService;
+import com.github.ep2p.eleuth.service.provider.SignedNodeDtoProvider;
 import com.github.ep2p.eleuth.service.stage.AvailabilityDistributionStage;
 import com.github.ep2p.eleuth.service.stage.AvailabilityRequestCacheStage;
 import com.github.ep2p.eleuth.service.stage.AvailabilityStoreStage;
@@ -29,19 +29,19 @@ public class PipelineConfiguration {
     private final MessageSignatureService messageSignatureService;
     private final RequestCacheService requestCacheService;
     private final EleuthKademliaRepositoryNode kademliaNode;
-    private final SignedNodeDtoProviderService signedNodeDtoProviderService;
+    private final SignedNodeDtoProvider signedNodeDtoProvider;
     private final ObjectMapper objectMapper;
     private final NodeConnectionRepository nodeConnectionRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    public PipelineConfiguration(NodeInformation nodeInformation, Validator validator, MessageSignatureService messageSignatureService, RequestCacheService requestCacheService, EleuthKademliaRepositoryNode kademliaNode, SignedNodeDtoProviderService signedNodeDtoProviderService, NodeConnectionRepository nodeConnectionRepository, ObjectMapper objectMapper, ApplicationEventPublisher applicationEventPublisher) {
+    public PipelineConfiguration(NodeInformation nodeInformation, Validator validator, MessageSignatureService messageSignatureService, RequestCacheService requestCacheService, EleuthKademliaRepositoryNode kademliaNode, SignedNodeDtoProvider signedNodeDtoProvider, NodeConnectionRepository nodeConnectionRepository, ObjectMapper objectMapper, ApplicationEventPublisher applicationEventPublisher) {
         this.nodeInformation = nodeInformation;
         this.validator = validator;
         this.messageSignatureService = messageSignatureService;
         this.requestCacheService = requestCacheService;
         this.kademliaNode = kademliaNode;
-        this.signedNodeDtoProviderService = signedNodeDtoProviderService;
+        this.signedNodeDtoProvider = signedNodeDtoProvider;
         this.nodeConnectionRepository = nodeConnectionRepository;
         this.objectMapper = objectMapper;
         this.applicationEventPublisher = applicationEventPublisher;
@@ -55,9 +55,9 @@ public class PipelineConfiguration {
                 .addStage(new AvailabilityRequestCacheStage(requestCacheService));
 
         if (nodeInformation.getNodeType().equals(NodeType.RING)) {
-            pipeline.addStage(new AvailabilityStoreStage(kademliaNode, signedNodeDtoProviderService, objectMapper));
+            pipeline.addStage(new AvailabilityStoreStage(kademliaNode, signedNodeDtoProvider, objectMapper));
         }else {
-            pipeline.addStage(new AvailabilityDistributionStage(nodeConnectionRepository, applicationEventPublisher, signedNodeDtoProviderService));
+            pipeline.addStage(new AvailabilityDistributionStage(nodeConnectionRepository, applicationEventPublisher, signedNodeDtoProvider));
         }
 
         return pipeline;

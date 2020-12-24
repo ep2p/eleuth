@@ -1,6 +1,7 @@
 package com.github.ep2p.eleuth.model.dto.kademlia;
 
 import com.github.ep2p.eleuth.model.dto.NodeDto;
+import com.github.ep2p.eleuth.model.dto.RingMemberProofDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +15,8 @@ import java.math.BigInteger;
 public class FindNodeRequest extends BasicRequest {
     private BigInteger lookupId;
 
-    public FindNodeRequest(SignedData<NodeDto> caller, BigInteger lookupId) {
-        super(caller);
+    public FindNodeRequest(SignedData<NodeDto> caller, SignedData<RingMemberProofDto> proof, BigInteger lookupId) {
+        super(caller, proof);
         this.lookupId = lookupId;
     }
 

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.github.ep2p.eleuth.config.KeyGenerationConfig.PARTIAL_RING_KEY_PART_SIZE;
 import static com.github.ep2p.eleuth.config.KeyGenerationConfig.RING_CHALLENGE_INT;
 
 @Slf4j
@@ -25,7 +26,7 @@ public class RingKeyService {
         this.ringMemberRepository = ringMemberRepository;
         KeyGenerator keyGenerator = new KeyGenerator();
         ChallengedKeyGeneratorDecorator challengedKeyGeneratorDecorator = new ChallengedKeyGeneratorDecorator(keyGenerator, RING_CHALLENGE_INT, userIdGenerator);
-        UserIdGenerator<String> userIdPartial128Generator = new PubHashUserIdPartial128Generator(6);
+        UserIdGenerator<String> userIdPartial128Generator = new PubHashUserIdPartial128Generator(PARTIAL_RING_KEY_PART_SIZE);
         this.ringKeyGenerator = new RingKeyGenerator(10, challengedKeyGeneratorDecorator, userIdPartial128Generator);
     }
 

@@ -2,6 +2,7 @@ package com.github.ep2p.eleuth.model.dto.kademlia;
 
 import com.github.ep2p.eleuth.model.NodeType;
 import com.github.ep2p.eleuth.model.dto.NodeDto;
+import com.github.ep2p.eleuth.model.dto.RingMemberProofDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.entity.Key;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
@@ -23,8 +24,8 @@ public class GetRequest extends BasicRequest {
     public GetRequest(Node<BigInteger, ROWConnectionInfo> requester) {
     }
 
-    public GetRequest(SignedData<NodeDto> node, Node<BigInteger, ROWConnectionInfo> requester) {
-        super(node);
+    public GetRequest(SignedData<NodeDto> node, SignedData<RingMemberProofDto> proof, Node<BigInteger, ROWConnectionInfo> requester) {
+        super(node, proof);
         setRequester(requester);
     }
 
