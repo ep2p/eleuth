@@ -30,8 +30,8 @@ public class RoutingTableLoader {
     @SneakyThrows
     public synchronized BigIntegerRoutingTable<ROWConnectionInfo> get() {
         if(routingTableRepository.existsByUniqueIsTrue()){
-            Page<RoutingTableEntity> page = routingTableRepository.findAll(new OffsetLimitPageable(0, 1));
-            return serializer.deserialize(page.getContent().get(0).getBytes());
+            RoutingTableEntity routingTableEntity = routingTableRepository.findByUniqueIsTrue();
+            return serializer.deserialize(routingTableEntity.getBytes());
         }
         return null;
     }
