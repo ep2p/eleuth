@@ -51,7 +51,7 @@ public class NodeValidatorService {
 
     public boolean isValidRingNode(SignedData<NodeDto> signedNodeDto, SignedData<RingMemberProofDto> ringMemberProofDtoSignedData){
         boolean verifiedRingKey = ringKeyVerifier.verify(bytesPublicKeyGenerator.generate(Base64Util.decode(ringMemberProofDtoSignedData.getPublicKey())), Base64Util.decode(signedNodeDto.getSignature()), ringMemberProofDtoSignedData.getData().getKey(), ringMemberProofDtoSignedData.getData().getPart());
-        return isValidRingNode(signedNodeDto) && verifiedRingKey;
+        return isValidRingNode(signedNodeDto) && nodeInformation.getRingKey().equals(ringMemberProofDtoSignedData.getData().getKey()) && verifiedRingKey;
     }
 
 }
