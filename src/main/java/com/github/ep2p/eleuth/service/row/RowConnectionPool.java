@@ -72,27 +72,40 @@ public class RowConnectionPool {
             return rowClient;
 
         if(nodeMap.containsKey(nodeId)){
-            RowUser rowUser = nodeMap.get(nodeId);
-            RowServerWebsocket<?> rowSession = rowSessionRegistry.getSession(rowUser.getUserId(), rowUser.getSessionId());
+            RowServerWebsocket<?> rowSession = getRowServerWSSession(nodeId);
             if(rowSession != null){
-                WebSocketSession webSocketSession = rowSession.getNativeSession(WebSocketSession.class);
-                SpringRowServerWebsocket springRowServerWebsocket = new SpringRowServerWebsocket(webSocketSession);
-                RowClientConfig rowClientConfig = springReuseRowClientFactory.getRowClientConfig();
-                configure(rowClientConfig);
-                RowClient reuseRowClient = springReuseRowClientFactory.getRowClient(rowClientConfig, springRowServerWebsocket);
+                RowClient reuseRowClient = getReuseClient(rowSession);
                 pool.put(nodeId, rowClient);
                 return reuseRowClient;
             }
         }
 
+        rowClient = getClient(rowConnectionInfo);
+        pool.put(rowConnectionInfo.getFullAddress(), rowClient);
+        return rowClient;
+    }
+
+    private RowClient getClient(ROWConnectionInfo rowConnectionInfo) {
         RowClientConfig<RowWebsocketSession> rowClientConfig = rowClientFactory.getRowClientConfig();
         configure(rowClientConfig);
         rowClientConfig.setAddress(rowConnectionInfo.getFullAddress());
         RestTemplateRowHttpClient restTemplateRowHttpClient = new RestTemplateRowHttpClient(rowConnectionInfo.getHttpAddress(), restTemplate, objectMapper);
-        RowClient rowClient2 = rowClientFactory.getRowClient(rowClientConfig, restTemplateRowHttpClient);
-        rowClient2.open();
-        pool.put(rowConnectionInfo.getFullAddress(), rowClient);
+        RowClient rowClient = rowClientFactory.getRowClient(rowClientConfig, restTemplateRowHttpClient);
+        rowClient.open();
         return rowClient;
+    }
+
+    private RowClient getReuseClient(RowServerWebsocket<?> rowSession) {
+        WebSocketSession webSocketSession = rowSession.getNativeSession(WebSocketSession.class);
+        SpringRowServerWebsocket springRowServerWebsocket = new SpringRowServerWebsocket(webSocketSession);
+        RowClientConfig rowClientConfig = springReuseRowClientFactory.getRowClientConfig();
+        configure(rowClientConfig);
+        return springReuseRowClientFactory.getRowClient(rowClientConfig, springRowServerWebsocket);
+    }
+
+    private RowServerWebsocket<?> getRowServerWSSession(String nodeId) {
+        RowUser rowUser = nodeMap.get(nodeId);
+        return rowSessionRegistry.getSession(rowUser.getUserId(), rowUser.getSessionId());
     }
 
 
