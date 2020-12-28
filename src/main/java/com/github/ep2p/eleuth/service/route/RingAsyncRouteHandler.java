@@ -6,7 +6,7 @@ import com.github.ep2p.eleuth.model.dto.NodeDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.dto.api.BaseResponse;
 import com.github.ep2p.eleuth.model.dto.route.AvailabilityMessage;
-import com.github.ep2p.eleuth.model.dto.route.AvailabilityResponse;
+import com.github.ep2p.eleuth.model.dto.route.AvailabilityReply;
 import com.github.ep2p.eleuth.service.MessageSignatureService;
 import com.github.ep2p.eleuth.service.provider.SignedRingProofProvider;
 import com.github.ep2p.eleuth.service.row.RowConnectionPool;
@@ -44,7 +44,7 @@ public class RingAsyncRouteHandler implements AsyncRouteHandler {
         availabilityPipeline.run(availabilityMessage, output);
         SignedData<NodeDto> route = availabilityMessage.getMessage().getRoute();
         RowClient client = rowConnectionPool.getClient(route.getData().getId().toString(), route.getData().getConnectionInfo());
-        client.sendRequest(RowRequest.<AvailabilityResponse, Void>builder()
+        client.sendRequest(RowRequest.<AvailabilityReply, Void>builder()
                 .method(RowRequest.RowMethod.POST)
                 .address("") //todo
                 .body(getAvailabilityResponse(availabilityMessage, output))
@@ -56,24 +56,24 @@ public class RingAsyncRouteHandler implements AsyncRouteHandler {
 
             @Override
             public void onError(Throwable throwable) {
-                log.error("Failed to send AvailabilityResponse");
+                log.error("Failed to send AvailabilityReply");
             }
         });
     }
 
-    private AvailabilityResponse getAvailabilityResponse(AvailabilityMessage availabilityMessage, AvailabilityOutput output) {
-        AvailabilityResponse.AvailabilityResponseBody availabilityResponseBody = new AvailabilityResponse.AvailabilityResponseBody();
-        availabilityResponseBody.setStatus(output.isFailed() ? BaseResponse.Status.FAIL : BaseResponse.Status.SUCCESS);
-        availabilityResponseBody.setHit(true);
-        availabilityResponseBody.setErrors(output.getErrorMessages());
-        availabilityResponseBody.setRequestId(availabilityMessage.getMessage().getBody().getData().getRequestId());
+    private AvailabilityReply getAvailabilityResponse(AvailabilityMessage availabilityMessage, AvailabilityOutput output) {
+        AvailabilityReply.AvailabilityReplyBody availabilityReplyBody = new AvailabilityReply.AvailabilityReplyBody();
+        availabilityReplyBody.setStatus(output.isFailed() ? BaseResponse.Status.FAIL : BaseResponse.Status.SUCCESS);
+        availabilityReplyBody.setHit(true);
+        availabilityReplyBody.setErrors(output.getErrorMessages());
+        availabilityReplyBody.setRequestId(availabilityMessage.getMessage().getBody().getData().getRequestId());
 
-        AvailabilityResponse.AvailabilityResponseMessage availabilityResponseMessage = new AvailabilityResponse.AvailabilityResponseMessage();
-        availabilityResponseMessage.setBody(messageSignatureService.sign(availabilityResponseBody, false));
-        availabilityResponseMessage.setRingProof(signedRingProofProvider.getRingProof());
+        AvailabilityReply.AvailabilityReplyMessage availabilityReplyMessage = new AvailabilityReply.AvailabilityReplyMessage();
+        availabilityReplyMessage.setBody(messageSignatureService.sign(availabilityReplyBody, true));
+        availabilityReplyMessage.setRingProof(signedRingProofProvider.getRingProof());
 
-        AvailabilityResponse availabilityResponse = new AvailabilityResponse();
-        availabilityResponse.setReply(availabilityResponseMessage);
-        return availabilityResponse;
+        AvailabilityReply availabilityReply = new AvailabilityReply();
+        availabilityReply.setReply(availabilityReplyMessage);
+        return availabilityReply;
     }
 }

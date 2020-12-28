@@ -1,12 +1,9 @@
 package com.github.ep2p.eleuth.service.listener;
 
-import com.github.ep2p.eleuth.model.AvailabilityOutput;
-import com.github.ep2p.eleuth.model.dto.api.BaseResponse;
 import com.github.ep2p.eleuth.model.dto.route.AvailabilityMessage;
-import com.github.ep2p.eleuth.model.dto.route.AvailabilityResponse;
+import com.github.ep2p.eleuth.model.dto.route.AvailabilityReply;
 import com.github.ep2p.eleuth.model.event.AvailabilityPublishEvent;
 import com.github.ep2p.eleuth.service.row.RowConnectionPool;
-import com.github.ep2p.eleuth.util.Pipeline;
 import lab.idioglossia.row.client.RowClient;
 import lab.idioglossia.row.client.callback.ResponseCallback;
 import lab.idioglossia.row.client.model.RowRequest;
@@ -22,28 +19,18 @@ import java.io.IOException;
 @Service
 @Slf4j
 public class AvailabilityPublishListener implements ApplicationListener<AvailabilityPublishEvent> {
-    private final Pipeline<AvailabilityMessage, AvailabilityOutput> availabilityPipeline;
     private final RowConnectionPool rowConnectionPool;
 
     @Autowired
-    public AvailabilityPublishListener(Pipeline<AvailabilityMessage, AvailabilityOutput> availabilityPipeline, RowConnectionPool rowConnectionPool) {
-        this.availabilityPipeline = availabilityPipeline;
+    public AvailabilityPublishListener(RowConnectionPool rowConnectionPool) {
         this.rowConnectionPool = rowConnectionPool;
-    }
-
-    public AvailabilityResponse available(AvailabilityMessage availabilityMessage){
-        AvailabilityOutput output = new AvailabilityOutput();
-        availabilityPipeline.run(availabilityMessage, output);
-        AvailabilityResponse availabilityResponse = new AvailabilityResponse(output.isFailed() ? BaseResponse.Status.FAIL : BaseResponse.Status.SUCCESS);
-        availabilityResponse.setErrors(output.getErrorMessages());
-        return availabilityResponse;
     }
 
     @Override
     public void onApplicationEvent(AvailabilityPublishEvent availabilityPublishEvent) {
-        ResponseCallback<AvailabilityResponse> callback = new ResponseCallback<AvailabilityResponse>(AvailabilityResponse.class) {
+        ResponseCallback<AvailabilityReply> callback = new ResponseCallback<AvailabilityReply>(AvailabilityReply.class) {
             @Override
-            public void onResponse(RowResponse<AvailabilityResponse> rowResponse) {
+            public void onResponse(RowResponse<AvailabilityReply> rowResponse) {
                 log.trace(rowResponse.toString());
             }
 

@@ -10,30 +10,30 @@ import java.util.List;
 
 @Getter
 @Setter
-public class AvailabilityResponse extends ProtocolResponse<AvailabilityResponse.AvailabilityResponseMessage> {
+public class AvailabilityReply extends ProtocolResponse<AvailabilityReply.AvailabilityReplyMessage> {
 
     @Getter
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class AvailabilityResponseMessage implements Serializable {
-        private SignedData<AvailabilityResponseBody> body;
+    public static class AvailabilityReplyMessage implements Serializable {
+        private SignedData<AvailabilityReplyBody> body;
         private SignedData<RingMemberProofDto> ringProof;
     }
 
     @Setter
     @Getter
     @NoArgsConstructor
-    public static class AvailabilityResponseBody extends BaseResponse implements Serializable {
+    public static class AvailabilityReplyBody extends BaseResponse implements Serializable {
         private String requestId;
 
-        public AvailabilityResponseBody(Status status, String requestId) {
+        public AvailabilityReplyBody(Status status, String requestId) {
             super(status);
             this.requestId = requestId;
         }
 
-        public AvailabilityResponseBody(String requestId) {
+        public AvailabilityReplyBody(String requestId) {
             this.requestId = requestId;
         }
 
