@@ -53,7 +53,7 @@ public class PipelineConfiguration {
         if (nodeInformation.getNodeType().equals(NodeType.RING)) {
             pipeline
                     .addStage(new RingKeyVerificationStage(nodeInformation))
-                    .addStage(new AvailabilityRequestCacheStage(requestCacheService))
+//                    .addStage(new AvailabilityRequestCacheStage(requestCacheService))
                     .addStage(new AvailabilityStoreStage(kademliaNode, signedNodeDtoProvider, objectMapper));
         }else {
             pipeline

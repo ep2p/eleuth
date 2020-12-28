@@ -1,5 +1,6 @@
 package com.github.ep2p.eleuth.service.provider;
 
+import com.github.ep2p.eleuth.config.annotation.ConditionalOnRing;
 import com.github.ep2p.eleuth.model.dto.RingMemberProofDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.entity.RingMemberEntity;
@@ -10,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
+@ConditionalOnRing
 public class SignedRingProofProvider {
     private final RingMemberRepository ringMemberRepository;
     private final MessageSignatureService messageSignatureService;

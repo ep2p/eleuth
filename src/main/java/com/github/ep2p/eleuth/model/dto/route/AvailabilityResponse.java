@@ -19,7 +19,7 @@ public class AvailabilityResponse extends ProtocolResponse<AvailabilityResponse.
     @Builder
     public static class AvailabilityResponseMessage implements Serializable {
         private SignedData<AvailabilityResponseBody> body;
-        private RingMemberProofDto ringProof;
+        private SignedData<RingMemberProofDto> ringProof;
     }
 
     @Setter
