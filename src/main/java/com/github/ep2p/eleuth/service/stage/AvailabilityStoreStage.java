@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.BigInteger;
 import java.util.Arrays;
 
+//Only on RING nodes, calls store method on kademlia node to store Availability message
 @Slf4j
 public class AvailabilityStoreStage implements Pipeline.Stage<AvailabilityMessage, AvailabilityOutput> {
     private final EleuthKademliaRepositoryNode kademliaNode;

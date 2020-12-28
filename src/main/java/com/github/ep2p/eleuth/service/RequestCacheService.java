@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+//caches requests to the node
 @Service
 public class RequestCacheService {
     private final CacheManager requestCache;

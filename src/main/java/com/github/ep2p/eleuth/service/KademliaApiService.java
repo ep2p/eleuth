@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.util.Date;
 
+//redirects kademlia api inputs to the kademlia node
 @Service
 @ConditionalOnRing
 @Slf4j

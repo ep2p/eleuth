@@ -27,6 +27,7 @@ import javax.websocket.CloseReason;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+//provides RowClient based on nodeId, provides api to register clients based on their existing connections
 @Service
 @Slf4j
 public class RowConnectionPool {

@@ -29,6 +29,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+//Kademlia NodeConnectionApi implementation to send requests to other Ring nodes
 @Service("rowNodeConnectionApi")
 @Slf4j
 public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWConnectionInfo> {

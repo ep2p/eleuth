@@ -18,16 +18,17 @@ import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 
+//provides api for general information of a node
 @Service
 @Slf4j
-public class ApiService {
+public class GeneralApiService {
     private final KeyStoreWrapper keyStoreWrapper;
     private final NodeInformation nodeInformation;
     private final ROWConnectionInfo rowConnectionInfo;
     private final MessageSignatureService messageSignatureService;
     private NodeInformationDto nodeInformationDto;
 
-    public ApiService(KeyStoreWrapper keyStoreWrapper, NodeInformation nodeInformation, ROWConnectionInfo rowConnectionInfo, MessageSignatureService messageSignatureService) {
+    public GeneralApiService(KeyStoreWrapper keyStoreWrapper, NodeInformation nodeInformation, ROWConnectionInfo rowConnectionInfo, MessageSignatureService messageSignatureService) {
         this.keyStoreWrapper = keyStoreWrapper;
         this.nodeInformation = nodeInformation;
         this.rowConnectionInfo = rowConnectionInfo;

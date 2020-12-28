@@ -20,6 +20,7 @@ import java.math.BigInteger;
 
 import static com.github.ep2p.eleuth.config.KeyGenerationConfig.PARTIAL_RING_KEY_PART_SIZE;
 
+//validates nodes based on their signature and type
 @Service
 public class NodeValidatorService {
     private final MessageSignatureService messageSignatureService;

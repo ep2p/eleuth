@@ -1,4 +1,4 @@
-package com.github.ep2p.eleuth;
+package com.github.ep2p.eleuth.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.ep2p.eleuth.model.AvailabilityOutput;

@@ -13,6 +13,7 @@ import com.github.ep2p.kademlia.table.RoutingTable;
 
 import java.math.BigInteger;
 
+//Eleuth implementation of KademliaRepositoryNode which overrides storing methods behavior based on input key type
 public class EleuthKademliaRepositoryNode extends KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> {
 
     public EleuthKademliaRepositoryNode(BigInteger nodeId, RoutingTable<BigInteger, ROWConnectionInfo, Bucket<BigInteger, ROWConnectionInfo>> routingTable, NodeConnectionApi<BigInteger, ROWConnectionInfo> nodeConnectionApi, ROWConnectionInfo connectionInfo, KademliaRepository<Key, String> kademliaRepository) {

@@ -23,6 +23,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 
+//signs messages and validates signatures
 @Service
 public class MessageSignatureService {
     private final MessageSigner messageSigner;

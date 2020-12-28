@@ -7,6 +7,7 @@ import com.github.ep2p.eleuth.util.Pipeline;
 
 import java.util.UUID;
 
+//calls request cache service to cache the request for Availability message
 public class AvailabilityRequestCacheStage implements Pipeline.Stage<AvailabilityMessage, AvailabilityOutput> {
     private final RequestCacheService requestCacheService;
 

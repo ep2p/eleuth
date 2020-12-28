@@ -8,6 +8,7 @@ import com.github.ep2p.eleuth.util.Pipeline;
 
 import javax.validation.Validator;
 
+//verifies Availability message
 public class AvailabilityVerificationStage extends AbstractVerificationStage implements Pipeline.Stage<AvailabilityMessage, AvailabilityOutput> {
 
     public AvailabilityVerificationStage(Validator validator, MessageSignatureService messageSignatureService) {

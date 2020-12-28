@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+//Only on PROXY node, publishes "AvailabilityPublishEvent" with lost of known nodes that should receive this availability message
 public class AvailabilityDistributionStage implements Pipeline.Stage<AvailabilityMessage, AvailabilityOutput> {
     private final NodeConnectionRepository nodeConnectionRepository;
     private final ApplicationEventPublisher applicationEventPublisher;

@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import java.math.BigInteger;
 import java.security.KeyPair;
 
+//Generates key for current node based on node type
 @Log4j2
 public class KeyService {
     private final ConfigProperties configProperties;

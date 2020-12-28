@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+//used for kademlia API in ring nodes
 @RowController
 @ConditionalOnRing
 public class RingController {

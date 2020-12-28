@@ -16,6 +16,7 @@ import java.util.List;
 import static com.github.ep2p.eleuth.config.KeyGenerationConfig.PARTIAL_RING_KEY_PART_SIZE;
 import static com.github.ep2p.eleuth.config.KeyGenerationConfig.RING_CHALLENGE_INT;
 
+//generates, imports and exports partial keys for ring
 @Slf4j
 @Service
 public class RingKeyService {

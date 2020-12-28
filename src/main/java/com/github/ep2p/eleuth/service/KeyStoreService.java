@@ -11,6 +11,7 @@ import java.io.File;
 import java.security.KeyPair;
 import java.security.KeyStore;
 
+//generates a keystore to hold keys of node
 @Log4j2
 public class KeyStoreService {
     private final ConfigProperties configProperties;

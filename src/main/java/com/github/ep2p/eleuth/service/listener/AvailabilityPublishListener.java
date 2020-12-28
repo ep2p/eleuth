@@ -1,4 +1,4 @@
-package com.github.ep2p.eleuth.service;
+package com.github.ep2p.eleuth.service.listener;
 
 import com.github.ep2p.eleuth.model.AvailabilityOutput;
 import com.github.ep2p.eleuth.model.dto.api.BaseResponse;
@@ -18,14 +18,15 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+//listens to "AvailabilityPublishEvent" and forwards Availability message to other nodes
 @Service
 @Slf4j
-public class AvailabilityService implements ApplicationListener<AvailabilityPublishEvent> {
+public class AvailabilityPublishListener implements ApplicationListener<AvailabilityPublishEvent> {
     private final Pipeline<AvailabilityMessage, AvailabilityOutput> availabilityPipeline;
     private final RowConnectionPool rowConnectionPool;
 
     @Autowired
-    public AvailabilityService(Pipeline<AvailabilityMessage, AvailabilityOutput> availabilityPipeline, RowConnectionPool rowConnectionPool) {
+    public AvailabilityPublishListener(Pipeline<AvailabilityMessage, AvailabilityOutput> availabilityPipeline, RowConnectionPool rowConnectionPool) {
         this.availabilityPipeline = availabilityPipeline;
         this.rowConnectionPool = rowConnectionPool;
     }
