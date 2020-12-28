@@ -9,12 +9,8 @@ import com.github.ep2p.eleuth.model.dto.route.AvailabilityMessage;
 import com.github.ep2p.eleuth.model.dto.route.AvailabilityReply;
 import com.github.ep2p.eleuth.service.MessageSignatureService;
 import com.github.ep2p.eleuth.service.provider.SignedRingProofProvider;
-import com.github.ep2p.eleuth.service.row.RowConnectionPool;
+import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.eleuth.util.Pipeline;
-import lab.idioglossia.row.client.RowClient;
-import lab.idioglossia.row.client.callback.ResponseCallback;
-import lab.idioglossia.row.client.model.RowRequest;
-import lab.idioglossia.row.client.model.RowResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
@@ -26,13 +22,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class RingAsyncRouteHandler implements AsyncRouteHandler {
     private final Pipeline<AvailabilityMessage, AvailabilityOutput> availabilityPipeline;
-    private final RowConnectionPool rowConnectionPool;
+    private final RouteMessageSender<ROWConnectionInfo> routeMessageSender;
     private final SignedRingProofProvider signedRingProofProvider;
     private final MessageSignatureService messageSignatureService;
 
-    public RingAsyncRouteHandler(Pipeline<AvailabilityMessage, AvailabilityOutput> availabilityPipeline, RowConnectionPool rowConnectionPool, SignedRingProofProvider signedRingProofProvider, MessageSignatureService messageSignatureService) {
+    public RingAsyncRouteHandler(Pipeline<AvailabilityMessage, AvailabilityOutput> availabilityPipeline, RouteMessageSender<ROWConnectionInfo> routeMessageSender, SignedRingProofProvider signedRingProofProvider, MessageSignatureService messageSignatureService) {
         this.availabilityPipeline = availabilityPipeline;
-        this.rowConnectionPool = rowConnectionPool;
+        this.routeMessageSender = routeMessageSender;
         this.signedRingProofProvider = signedRingProofProvider;
         this.messageSignatureService = messageSignatureService;
     }
@@ -43,22 +39,7 @@ public class RingAsyncRouteHandler implements AsyncRouteHandler {
         AvailabilityOutput output = new AvailabilityOutput();
         availabilityPipeline.run(availabilityMessage, output);
         SignedData<NodeDto> route = availabilityMessage.getMessage().getRoute();
-        RowClient client = rowConnectionPool.getClient(route.getData().getId().toString(), route.getData().getConnectionInfo());
-        client.sendRequest(RowRequest.<AvailabilityReply, Void>builder()
-                .method(RowRequest.RowMethod.POST)
-                .address("") //todo
-                .body(getAvailabilityResponse(availabilityMessage, output))
-                .build(), new ResponseCallback<BaseResponse>(BaseResponse.class) {
-            @Override
-            public void onResponse(RowResponse<BaseResponse> rowResponse) {
-
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                log.error("Failed to send AvailabilityReply");
-            }
-        });
+        routeMessageSender.sendAvailabilityReply(route.getData().getId().toString(), route.getData().getConnectionInfo(), getAvailabilityResponse(availabilityMessage, output));
     }
 
     private AvailabilityReply getAvailabilityResponse(AvailabilityMessage availabilityMessage, AvailabilityOutput output) {

@@ -8,11 +8,7 @@ import com.github.ep2p.eleuth.model.dto.route.AvailabilityMessage;
 import com.github.ep2p.eleuth.model.dto.route.AvailabilityReply;
 import com.github.ep2p.eleuth.service.MessageSignatureService;
 import com.github.ep2p.eleuth.service.RequestCacheService;
-import com.github.ep2p.eleuth.service.row.RowConnectionPool;
-import lab.idioglossia.row.client.RowClient;
-import lab.idioglossia.row.client.callback.ResponseCallback;
-import lab.idioglossia.row.client.model.RowRequest;
-import lab.idioglossia.row.client.model.RowResponse;
+import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +21,14 @@ public class RouteApiService {
     private final AsyncRouteHandler asyncRouteHandler;
     private final RequestCacheService requestCacheService;
     private final MessageSignatureService messageSignatureService;
-    private final RowConnectionPool rowConnectionPool;
+    private final RouteMessageSender<ROWConnectionInfo> routeMessageSender;
 
     @Autowired
-    public RouteApiService(AsyncRouteHandler asyncRouteHandler, RequestCacheService requestCacheService, MessageSignatureService messageSignatureService, RowConnectionPool rowConnectionPool) {
+    public RouteApiService(AsyncRouteHandler asyncRouteHandler, RequestCacheService requestCacheService, MessageSignatureService messageSignatureService, RouteMessageSender<ROWConnectionInfo> routeMessageSender) {
         this.asyncRouteHandler = asyncRouteHandler;
         this.requestCacheService = requestCacheService;
         this.messageSignatureService = messageSignatureService;
-        this.rowConnectionPool = rowConnectionPool;
+        this.routeMessageSender = routeMessageSender;
     }
 
     public BaseResponse onAvailabilityMessage(AvailabilityMessage availabilityMessage){
@@ -61,24 +57,8 @@ public class RouteApiService {
             //todo: forward reply to the client!
         }else {
             //forwarding reply to requester proxy
-
             SignedData<NodeDto> route = cachedAvailabilityMessage.getMessage().getRoute();
-            RowClient client = rowConnectionPool.getClient(route.getData().getId().toString(), route.getData().getConnectionInfo());
-            client.sendRequest(RowRequest.<AvailabilityReply, Void>builder()
-                    .method(RowRequest.RowMethod.POST)
-                    .address("") //todo
-                    .body(availabilityReply)
-                    .build(), new ResponseCallback<BaseResponse>(BaseResponse.class) {
-                @Override
-                public void onResponse(RowResponse<BaseResponse> rowResponse) {
-
-                }
-
-                @Override
-                public void onError(Throwable throwable) {
-                    log.error("Failed to send AvailabilityReply");
-                }
-            });
+            routeMessageSender.sendAvailabilityReply(route.getData().getId().toString(), route.getData().getConnectionInfo(), availabilityReply);
         }
 
         requestCacheService.evictAvailability(requestId);
