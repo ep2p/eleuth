@@ -46,7 +46,7 @@ public class KademliaApiService {
     @PostConstruct
     public void init(){
         this.nodeDto = signedNodeDtoProvider.getWithCertificate();
-        this.memberProofDto = signedRingProofProvider.getMembershipProof();
+        this.memberProofDto = signedRingProofProvider.getRingProof();
     }
 
     private Node<BigInteger, ROWConnectionInfo> getNodeFromDto(NodeDto nodeDto){
@@ -55,7 +55,7 @@ public class KademliaApiService {
 
     public PingResponse onPing(BasicRequest basicRequest){
         try {
-            validate(basicRequest.getCaller(), basicRequest.getMembershipProof());
+            validate(basicRequest.getCaller(), basicRequest.getRingProof());
             PingAnswer<BigInteger> pingAnswer = kademliaNode.onPing(getNodeFromDto(basicRequest.getCaller().getData()));
             return new PingResponse(this.nodeDto, this.memberProofDto, pingAnswer);
         } catch (NodeIsOfflineException e) {
@@ -68,7 +68,7 @@ public class KademliaApiService {
 
     public BasicResponse store(StoreRequest storeRequest){
         try {
-            validate(storeRequest.getCaller(), storeRequest.getMembershipProof());
+            validate(storeRequest.getCaller(), storeRequest.getRingProof());
             validate(storeRequest);
             kademliaNode.onStoreRequest(getNodeFromDto(storeRequest.getCaller().getData()), getNodeFromDto(storeRequest.getRequester()), storeRequest.getKey(), storeRequest.getValue());
             return new BasicResponse(this.nodeDto, this.memberProofDto);
@@ -86,7 +86,7 @@ public class KademliaApiService {
 
     public BasicResponse onShutdownSignal(BasicRequest basicRequest){
         try {
-            validate(basicRequest.getCaller(), basicRequest.getMembershipProof());
+            validate(basicRequest.getCaller(), basicRequest.getRingProof());
             kademliaNode.onShutdownSignal(getNodeFromDto(basicRequest.getCaller().getData()));
             return new BasicResponse(this.nodeDto, this.memberProofDto);
         } catch (InvalidSignatureException e) {
@@ -97,7 +97,7 @@ public class KademliaApiService {
 
     public FindNodeResponse findNode(FindNodeRequest findNodeRequest){
         try {
-            validate(findNodeRequest.getCaller(), findNodeRequest.getMembershipProof());
+            validate(findNodeRequest.getCaller(), findNodeRequest.getRingProof());
             FindNodeAnswer<BigInteger, ROWConnectionInfo> findNodeAnswer = kademliaNode.onFindNode(getNodeFromDto(findNodeRequest.getCaller().getData()), findNodeRequest.getLookupId());
             return new FindNodeResponse(this.nodeDto, this.memberProofDto, findNodeAnswer);
         } catch (InvalidSignatureException e) {
@@ -108,7 +108,7 @@ public class KademliaApiService {
 
     public BasicResponse get(GetRequest getRequest){
         try {
-            validate(getRequest.getCaller(), getRequest.getMembershipProof());
+            validate(getRequest.getCaller(), getRequest.getRingProof());
             kademliaNode.onGetRequest(getNodeFromDto(getRequest.getCaller().getData()), getNodeFromDto(getRequest.getRequester()), getRequest.getKey());
             return new BasicResponse(this.nodeDto, this.memberProofDto);
         } catch (InvalidSignatureException e) {
@@ -119,7 +119,7 @@ public class KademliaApiService {
 
     public BasicResponse onGetResult(GetResultRequest getResultRequest){
         try {
-            validate(getResultRequest.getCaller(), getResultRequest.getMembershipProof());
+            validate(getResultRequest.getCaller(), getResultRequest.getRingProof());
             kademliaNode.onGetResult(getNodeFromDto(getResultRequest.getCaller().getData()), getResultRequest.getKey(), getResultRequest.getValue());
             return new BasicResponse(this.nodeDto, this.memberProofDto);
         } catch (InvalidSignatureException e) {
@@ -130,7 +130,7 @@ public class KademliaApiService {
 
     public BasicResponse onStoreResult(StoreResultRequest storeResultRequest){
         try {
-            validate(storeResultRequest.getCaller(), storeResultRequest.getMembershipProof());
+            validate(storeResultRequest.getCaller(), storeResultRequest.getRingProof());
             kademliaNode.onStoreResult(getNodeFromDto(storeResultRequest.getCaller().getData()), storeResultRequest.getKey(), storeResultRequest.isSuccess());
             return new BasicResponse(this.nodeDto, this.memberProofDto);
         } catch (InvalidSignatureException e) {

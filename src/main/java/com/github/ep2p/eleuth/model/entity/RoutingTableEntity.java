@@ -17,6 +17,7 @@ public class RoutingTableEntity {
     @Id
     @GeneratedValue
     private Integer id;
+    @Builder.Default
     private boolean unique = true;
     private byte[] bytes;
 }

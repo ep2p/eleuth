@@ -38,7 +38,7 @@ public class QueryMessage extends ProtocolMessage<QueryMessage.Message> {
         @NotNull
         private BigInteger nodeId;
         private String requestId;
-        private BigInteger ringId;
+        private String ringKey;
         private long timestamp;
 
         @AssertTrue

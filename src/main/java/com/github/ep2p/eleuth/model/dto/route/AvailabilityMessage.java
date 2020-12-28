@@ -40,7 +40,7 @@ public class AvailabilityMessage extends ProtocolMessage<AvailabilityMessage.Mes
         @NotNull
         private BigInteger nodeId;
         private String requestId;
-        private BigInteger ringId;
+        private String ringKey;
         private long timestamp;
 
         @AssertTrue

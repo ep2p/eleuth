@@ -37,7 +37,7 @@ public class SendDataMessage extends ProtocolMessage<SendDataMessage.Message> {
         @NotNull
         private BigInteger receiver;
         @NotNull
-        private BigInteger ringId;
+        private String ringKey;
         @NotNull
         private Long timestamp;
         @NotNull

@@ -16,6 +16,7 @@ public class RingMemberEntity {
     private final String id = "membership";
     private String key;
     private List<PubPrv> keys;
+    @Builder.Default
     private boolean partial = false;
 
 

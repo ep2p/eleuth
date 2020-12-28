@@ -22,5 +22,6 @@ public class MessageEntity {
     private Date creationDate;
     private BigInteger receiver;
     private byte[] data;
+    @Builder.Default
     private int version = 1;
 }

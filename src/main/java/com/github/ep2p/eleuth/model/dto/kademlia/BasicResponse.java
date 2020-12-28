@@ -12,5 +12,5 @@ import lombok.*;
 @Builder
 public class BasicResponse {
     private SignedData<NodeDto> node;
-    private SignedData<RingMemberProofDto> membershipProof;
+    private SignedData<RingMemberProofDto> ringProof;
 }

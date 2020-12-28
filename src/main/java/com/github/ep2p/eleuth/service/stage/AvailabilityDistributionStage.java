@@ -12,7 +12,6 @@ import com.github.ep2p.eleuth.service.provider.SignedNodeDtoProvider;
 import com.github.ep2p.eleuth.util.Pipeline;
 import org.springframework.context.ApplicationEventPublisher;
 
-import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -32,8 +31,8 @@ public class AvailabilityDistributionStage implements Pipeline.Stage<Availabilit
 
     @Override
     public boolean process(AvailabilityMessage availabilityMessage, AvailabilityOutput o) {
-        BigInteger ringId = availabilityMessage.getMessage().getBody().getData().getRingId();
-        List<NodeConnectionEntity> nodeConnectionEntities = nodeConnectionRepository.findAllByRingId(ringId);
+        String ringKey = availabilityMessage.getMessage().getBody().getData().getRingKey();
+        List<NodeConnectionEntity> nodeConnectionEntities = nodeConnectionRepository.findAllByRingKey(ringKey);
         if(nodeConnectionEntities.size() == 0){
             nodeConnectionEntities = getRecentAliveNodes();
         }

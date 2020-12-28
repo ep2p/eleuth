@@ -21,7 +21,7 @@ public class SignedRingProofProvider {
     }
 
     @Cacheable(cacheManager = "signedNodeInformationCache", value = "membership")
-    public SignedData<RingMemberProofDto> getMembershipProof(){
+    public SignedData<RingMemberProofDto> getRingProof(){
         RingMemberEntity ringMemberEntity = ringMemberRepository.get();
         RingMemberEntity.PubPrv pubPrv = ringMemberEntity.getKeys().get(0);
         RingMemberProofDto ringMemberProofDto = RingMemberProofDto.builder().key(ringMemberEntity.getKey())

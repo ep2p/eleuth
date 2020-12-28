@@ -18,8 +18,8 @@ public class PingResponse extends BasicResponse {
         this.pingAnswer = pingAnswer;
     }
 
-    public PingResponse(SignedData<NodeDto> node, SignedData<RingMemberProofDto> membershipProof, PingAnswer<BigInteger> pingAnswer) {
-        super(node, membershipProof);
+    public PingResponse(SignedData<NodeDto> node, SignedData<RingMemberProofDto> ringProof, PingAnswer<BigInteger> pingAnswer) {
+        super(node, ringProof);
         this.pingAnswer = pingAnswer;
     }
 

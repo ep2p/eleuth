@@ -10,10 +10,7 @@ import com.github.ep2p.eleuth.service.EleuthKademliaRepositoryNode;
 import com.github.ep2p.eleuth.service.MessageSignatureService;
 import com.github.ep2p.eleuth.service.RequestCacheService;
 import com.github.ep2p.eleuth.service.provider.SignedNodeDtoProvider;
-import com.github.ep2p.eleuth.service.stage.AvailabilityDistributionStage;
-import com.github.ep2p.eleuth.service.stage.AvailabilityRequestCacheStage;
-import com.github.ep2p.eleuth.service.stage.AvailabilityStoreStage;
-import com.github.ep2p.eleuth.service.stage.AvailabilityVerificationStage;
+import com.github.ep2p.eleuth.service.stage.*;
 import com.github.ep2p.eleuth.util.Pipeline;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -51,13 +48,17 @@ public class PipelineConfiguration {
     @Bean("availabilityPipeline")
     public Pipeline<AvailabilityMessage, AvailabilityOutput> availabilityPipeline(){
         Pipeline<AvailabilityMessage, AvailabilityOutput> pipeline = new Pipeline<>();
-        pipeline.addStage(new AvailabilityVerificationStage(validator, messageSignatureService))
-                .addStage(new AvailabilityRequestCacheStage(requestCacheService));
+        pipeline.addStage(new AvailabilityVerificationStage(validator, messageSignatureService));
 
         if (nodeInformation.getNodeType().equals(NodeType.RING)) {
-            pipeline.addStage(new AvailabilityStoreStage(kademliaNode, signedNodeDtoProvider, objectMapper));
+            pipeline
+                    .addStage(new RingKeyVerificationStage(nodeInformation))
+                    .addStage(new AvailabilityRequestCacheStage(requestCacheService))
+                    .addStage(new AvailabilityStoreStage(kademliaNode, signedNodeDtoProvider, objectMapper));
         }else {
-            pipeline.addStage(new AvailabilityDistributionStage(nodeConnectionRepository, applicationEventPublisher, signedNodeDtoProvider));
+            pipeline
+                    .addStage(new AvailabilityRequestCacheStage(requestCacheService))
+                    .addStage(new AvailabilityDistributionStage(nodeConnectionRepository, applicationEventPublisher, signedNodeDtoProvider));
         }
 
         return pipeline;

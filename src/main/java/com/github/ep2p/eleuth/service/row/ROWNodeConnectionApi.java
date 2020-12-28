@@ -49,7 +49,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public PingAnswer<BigInteger> ping(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> node) {
-        RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.PUT, "/ring/ping", null, new BasicRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getMembershipProof()), new HashMap<>());
+        RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.PUT, "/ring/ping", null, new BasicRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getRingProof()), new HashMap<>());
 
         AtomicReference<PingAnswer<BigInteger>> responseAtomicAnswer = new AtomicReference<>(new PingAnswer<>(node.getId(), false));
         CountDownLatch latch = new CountDownLatch(1);
@@ -59,7 +59,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
                 @Override
                 public void onResponse(RowResponse<PingResponse> rowResponse) {
                     try {
-                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getMembershipProof());
+                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getRingProof());
                         responseAtomicAnswer.set(rowResponse.getBody().getPingAnswer());
                     } catch (InvalidSignatureException e) {
                         log.error("Could not validate signatures inside response", e);
@@ -87,7 +87,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public void shutdownSignal(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> node) {
-        RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/shutdown-signal", null, new BasicRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getMembershipProof()), new HashMap<>());
+        RowRequest<BasicRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/shutdown-signal", null, new BasicRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getRingProof()), new HashMap<>());
         try {
             rowConnectionPool.getClient(node.getId().toString(), node.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
@@ -103,7 +103,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public FindNodeAnswer<BigInteger, ROWConnectionInfo> findNode(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> node, BigInteger nodeId) {
-        RowRequest<FindNodeRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/find", null, new FindNodeRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getMembershipProof(), nodeId), new HashMap<>());
+        RowRequest<FindNodeRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/find", null, new FindNodeRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getRingProof(), nodeId), new HashMap<>());
         FindNodeAnswer<BigInteger, ROWConnectionInfo> defaultAnswer = new FindNodeAnswer<BigInteger, ROWConnectionInfo>(BigInteger.valueOf(0));
         defaultAnswer.setAlive(false);
         AtomicReference<FindNodeAnswer<BigInteger, ROWConnectionInfo>> responseAtomicAnswer = new AtomicReference<>(defaultAnswer);
@@ -137,7 +137,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
     //not async yet
     @Override
     public <K, V> void storeAsync(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> requester, Node<BigInteger, ROWConnectionInfo> node, K key, V value) {
-        StoreRequest storeRequest = new StoreRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getMembershipProof(), requester);
+        StoreRequest storeRequest = new StoreRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getRingProof(), requester);
         storeRequest.setKey(getKey(key));
         storeRequest.setValue(getValue(value));
         RowRequest<StoreRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/store", null, storeRequest, new HashMap<>());
@@ -146,7 +146,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
                     try {
-                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getMembershipProof());
+                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getRingProof());
                     } catch (InvalidSignatureException e) {
                         log.error("Could not validate signatures inside response", e);
                     }
@@ -164,7 +164,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public <K> void getRequest(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> requester, Node<BigInteger, ROWConnectionInfo> node, K key) {
-        GetRequest getRequest = new GetRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getMembershipProof(), requester);
+        GetRequest getRequest = new GetRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getRingProof(), requester);
         getRequest.setKey(getKey(key));
         RowRequest<GetRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/get", null, getRequest, new HashMap<>());
         try {
@@ -172,7 +172,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
                     try {
-                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getMembershipProof());
+                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getRingProof());
                     } catch (InvalidSignatureException e) {
                         log.error("Could not validate signatures inside response", e);
                     }
@@ -190,7 +190,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public <K, V> void sendGetResults(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> requester, K key, V value) {
-        GetResultRequest getResultRequest = new GetResultRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getMembershipProof());
+        GetResultRequest getResultRequest = new GetResultRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getRingProof());
         getResultRequest.setKey(getKey(key));
         getResultRequest.setValue(getValue(value));
         RowRequest<GetResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/get/result", null, getResultRequest, new HashMap<>());
@@ -199,7 +199,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
                     try {
-                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getMembershipProof());
+                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getRingProof());
                     } catch (InvalidSignatureException e) {
                         log.error("Could not validate signatures inside response", e);
                     }
@@ -217,7 +217,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
 
     @Override
     public <K> void sendStoreResults(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> requester, K key, boolean success) {
-        StoreResultRequest storeResultRequest = new StoreResultRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getMembershipProof());
+        StoreResultRequest storeResultRequest = new StoreResultRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getRingProof());
         storeResultRequest.setKey(getKey(key));
         storeResultRequest.setSuccess(success);
         RowRequest<StoreResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/ring/store/result", null, storeResultRequest, new HashMap<>());
@@ -226,7 +226,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
                 @Override
                 public void onResponse(RowResponse<BasicResponse> rowResponse) {
                     try {
-                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getMembershipProof());
+                        validate(rowResponse.getBody().getNode(), rowResponse.getBody().getRingProof());
                     } catch (InvalidSignatureException e) {
                         log.error("Could not validate signatures inside response", e);
                     }

@@ -22,5 +22,6 @@ public class NodeInformationEntity {
     private Date creationDate;
     private BigInteger nodeId;
     private byte[] data;
+    @Builder.Default
     private int version = 1;
 }

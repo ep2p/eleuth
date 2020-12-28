@@ -13,5 +13,5 @@ import lombok.*;
 @ToString
 public class BasicRequest {
     private SignedData<NodeDto> caller;
-    private SignedData<RingMemberProofDto> membershipProof;
+    private SignedData<RingMemberProofDto> ringProof;
 }

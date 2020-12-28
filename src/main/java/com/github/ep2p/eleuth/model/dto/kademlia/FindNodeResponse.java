@@ -15,8 +15,8 @@ import java.math.BigInteger;
 public class FindNodeResponse extends BasicResponse {
     private FindNodeAnswer<BigInteger, ROWConnectionInfo> answer;
 
-    public FindNodeResponse(SignedData<NodeDto> node, SignedData<RingMemberProofDto> membershipProof, FindNodeAnswer<BigInteger, ROWConnectionInfo> answer) {
-        super(node, membershipProof);
+    public FindNodeResponse(SignedData<NodeDto> node, SignedData<RingMemberProofDto> ringProof, FindNodeAnswer<BigInteger, ROWConnectionInfo> answer) {
+        super(node, ringProof);
         this.answer = answer;
     }
 
