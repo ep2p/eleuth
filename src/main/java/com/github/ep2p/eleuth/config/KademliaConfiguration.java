@@ -56,7 +56,7 @@ public class KademliaConfiguration {
     @DependsOn({"rowConnectionPool", "signedNodeDtoProvider", "signedRingProofProvider", "nodeValidatorService", "keyStoreWrapper, nodeInformation"})
     public NodeConnectionApi<BigInteger, ROWConnectionInfo> nodeConnectionApi(RowConnectionPool rowConnectionPool, SignedNodeDtoProvider signedNodeDtoProvider, SignedRingProofProvider signedRingProofProvider, NodeValidatorService nodeValidatorService, KeyStoreWrapper keyStoreWrapper, NodeInformation nodeInformation){
         ROWNodeConnectionApi rowNodeConnectionApi = new ROWNodeConnectionApi(rowConnectionPool, signedNodeDtoProvider, signedRingProofProvider, nodeValidatorService);
-        return new CertificateCollectorNodeConnectionApiDecorator(rowNodeConnectionApi, keyStoreWrapper, nodeInformation);
+        return new CertificateCollectorNodeConnectionApiDecorator(rowNodeConnectionApi, keyStoreWrapper, nodeInformation, userIdGenerator);
     }
 
     @Bean("kademliaNode")
