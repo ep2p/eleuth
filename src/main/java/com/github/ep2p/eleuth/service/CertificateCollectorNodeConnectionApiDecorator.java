@@ -1,6 +1,5 @@
 package com.github.ep2p.eleuth.service;
 
-import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.eleuth.util.CertificateUtil;
 import com.github.ep2p.encore.helper.KeyStoreWrapper;
