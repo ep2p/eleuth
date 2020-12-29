@@ -47,6 +47,7 @@ public class CertificateCollectorNodeConnectionApiDecorator extends NodeConnecti
                 log.error("Failed to add certificate", e);
             }
         });
+        findNodeAnswer.getNodes().removeAll(untrusted);
         return findNodeAnswer;
     }
 }
