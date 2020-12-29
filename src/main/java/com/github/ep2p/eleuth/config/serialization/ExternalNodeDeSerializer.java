@@ -34,6 +34,7 @@ public class ExternalNodeDeSerializer extends StdDeserializer<ExternalNode<BigIn
                     .address(jsonNode1.get("address").asText())
                     .port(jsonNode1.get("port").asInt())
                     .ssl(jsonNode1.get("ssl").asBoolean())
+                    .certificate(jsonNode1.get("certificate").asText())
                     .build();
             bigIntegerExternalNode.setConnectionInfo(rowConnectionInfo);
         }

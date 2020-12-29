@@ -7,13 +7,13 @@ import com.github.ep2p.encore.key.ChallengedKeyGeneratorDecorator;
 import com.github.ep2p.encore.key.KeyGenerator;
 import com.github.ep2p.encore.key.MultiThreadChallengedKeyGenerator;
 import com.github.ep2p.encore.key.UserIdGenerator;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigInteger;
 import java.security.KeyPair;
 
 //Generates key for current node based on node type
-@Log4j2
+@Slf4j
 public class KeyService {
     private final ConfigProperties configProperties;
     private final UserIdGenerator<BigInteger> userIdGenerator;

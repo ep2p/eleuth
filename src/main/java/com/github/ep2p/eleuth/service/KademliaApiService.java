@@ -33,7 +33,7 @@ public class KademliaApiService implements KademliaApi {
     private final SignedRingProofProvider signedRingProofProvider;
     private final SignedNodeDtoProvider signedNodeDtoProvider;
     private SignedData<NodeDto> nodeDto;
-    private SignedData<RingMemberProofDto> memberProofDto;
+    private SignedData<RingMemberProofDto> ringProof;
 
     @Autowired
     public KademliaApiService(KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> kademliaNode, NodeValidatorService nodeValidatorService, SignedRingProofProvider signedRingProofProvider, SignedNodeDtoProvider signedNodeDtoProvider) {
@@ -46,7 +46,7 @@ public class KademliaApiService implements KademliaApi {
     @PostConstruct
     public void init(){
         this.nodeDto = signedNodeDtoProvider.getWithCertificate();
-        this.memberProofDto = signedRingProofProvider.getRingProof();
+        this.ringProof = signedRingProofProvider.getRingProof();
     }
 
     private Node<BigInteger, ROWConnectionInfo> getNodeFromDto(NodeDto nodeDto){
@@ -57,9 +57,9 @@ public class KademliaApiService implements KademliaApi {
         try {
             validate(basicRequest.getCaller(), basicRequest.getRingProof());
             PingAnswer<BigInteger> pingAnswer = kademliaNode.onPing(getNodeFromDto(basicRequest.getCaller().getData()));
-            return new PingResponse(this.nodeDto, this.memberProofDto, pingAnswer);
+            return new PingResponse(this.nodeDto, this.ringProof, pingAnswer);
         } catch (NodeIsOfflineException e) {
-            return new PingResponse(this.nodeDto, this.memberProofDto, new PingAnswer<>(kademliaNode.getId(), false));
+            return new PingResponse(this.nodeDto, this.ringProof, new PingAnswer<>(kademliaNode.getId(), false));
         } catch (InvalidSignatureException e) {
             log.error("Invalid signature of caller", e);
             return new PingResponse();
@@ -71,7 +71,7 @@ public class KademliaApiService implements KademliaApi {
             validate(storeRequest.getCaller(), storeRequest.getRingProof());
             validate(storeRequest);
             kademliaNode.onStoreRequest(getNodeFromDto(storeRequest.getCaller().getData()), getNodeFromDto(storeRequest.getRequester()), storeRequest.getKey(), storeRequest.getValue());
-            return new BasicResponse(this.nodeDto, this.memberProofDto);
+            return new BasicResponse(this.nodeDto, this.ringProof);
         } catch (InvalidSignatureException e) {
             log.error("Invalid signature of caller", e);
         }
@@ -88,7 +88,7 @@ public class KademliaApiService implements KademliaApi {
         try {
             validate(basicRequest.getCaller(), basicRequest.getRingProof());
             kademliaNode.onShutdownSignal(getNodeFromDto(basicRequest.getCaller().getData()));
-            return new BasicResponse(this.nodeDto, this.memberProofDto);
+            return new BasicResponse(this.nodeDto, this.ringProof);
         } catch (InvalidSignatureException e) {
             log.error("Invalid signature of caller", e);
         }
@@ -99,7 +99,7 @@ public class KademliaApiService implements KademliaApi {
         try {
             validate(findNodeRequest.getCaller(), findNodeRequest.getRingProof());
             FindNodeAnswer<BigInteger, ROWConnectionInfo> findNodeAnswer = kademliaNode.onFindNode(getNodeFromDto(findNodeRequest.getCaller().getData()), findNodeRequest.getLookupId());
-            return new FindNodeResponse(this.nodeDto, this.memberProofDto, findNodeAnswer);
+            return new FindNodeResponse(this.nodeDto, this.ringProof, findNodeAnswer);
         } catch (InvalidSignatureException e) {
             log.error("Invalid signature of caller", e);
         } catch (NodeIsOfflineException ignored) {}
@@ -110,7 +110,7 @@ public class KademliaApiService implements KademliaApi {
         try {
             validate(getRequest.getCaller(), getRequest.getRingProof());
             kademliaNode.onGetRequest(getNodeFromDto(getRequest.getCaller().getData()), getNodeFromDto(getRequest.getRequester()), getRequest.getKey());
-            return new BasicResponse(this.nodeDto, this.memberProofDto);
+            return new BasicResponse(this.nodeDto, this.ringProof);
         } catch (InvalidSignatureException e) {
             log.error("Invalid signature of caller", e);
         }
@@ -121,7 +121,7 @@ public class KademliaApiService implements KademliaApi {
         try {
             validate(getResultRequest.getCaller(), getResultRequest.getRingProof());
             kademliaNode.onGetResult(getNodeFromDto(getResultRequest.getCaller().getData()), getResultRequest.getKey(), getResultRequest.getValue());
-            return new BasicResponse(this.nodeDto, this.memberProofDto);
+            return new BasicResponse(this.nodeDto, this.ringProof);
         } catch (InvalidSignatureException e) {
             log.error("Invalid signature of caller", e);
         }
@@ -132,7 +132,7 @@ public class KademliaApiService implements KademliaApi {
         try {
             validate(storeResultRequest.getCaller(), storeResultRequest.getRingProof());
             kademliaNode.onStoreResult(getNodeFromDto(storeResultRequest.getCaller().getData()), storeResultRequest.getKey(), storeResultRequest.isSuccess());
-            return new BasicResponse(this.nodeDto, this.memberProofDto);
+            return new BasicResponse(this.nodeDto, this.ringProof);
         } catch (InvalidSignatureException e) {
             log.error("Invalid signature of caller", e);
         }

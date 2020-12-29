@@ -4,7 +4,7 @@ import com.github.ep2p.eleuth.config.ConfigProperties;
 import com.github.ep2p.eleuth.util.Path;
 import com.github.ep2p.encore.key.CNGenerator;
 import com.github.ep2p.encore.key.KeyStoreGenerator;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -12,7 +12,7 @@ import java.security.KeyPair;
 import java.security.KeyStore;
 
 //generates a keystore to hold keys of node
-@Log4j2
+@Slf4j
 public class KeyStoreService {
     private final ConfigProperties configProperties;
     private final KeyService keyService;

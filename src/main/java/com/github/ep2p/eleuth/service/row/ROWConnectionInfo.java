@@ -15,6 +15,7 @@ public class ROWConnectionInfo implements ConnectionInfo {
     private String address;
     private int port;
     private boolean ssl;
+    private String certificate;
 
     @JsonIgnore
     public String getHttpAddress() {

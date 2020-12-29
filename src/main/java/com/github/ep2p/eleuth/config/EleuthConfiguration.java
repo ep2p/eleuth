@@ -10,11 +10,12 @@ import com.github.ep2p.eleuth.repository.RingMemberRepository;
 import com.github.ep2p.eleuth.service.KeyService;
 import com.github.ep2p.eleuth.service.KeyStoreService;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
+import com.github.ep2p.eleuth.util.Base64Util;
 import com.github.ep2p.encore.helper.KeyStoreWrapper;
 import com.github.ep2p.encore.key.CNGenerator;
 import com.github.ep2p.encore.key.PubHashUserId128Generator;
 import com.github.ep2p.encore.key.UserIdGenerator;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -25,13 +26,15 @@ import org.springframework.core.env.Environment;
 
 import java.math.BigInteger;
 import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.TimeZone;
 
 @Configuration
-@Log4j2
+@Slf4j
 @EnableConfigurationProperties({ConfigProperties.class, NodeProperties.class})
 public class EleuthConfiguration {
     private final ConfigProperties configProperties;
@@ -49,10 +52,7 @@ public class EleuthConfiguration {
         log.info("Node Properties: "+ nodeProperties.toString());
     }
 
-    @Bean
-    public ROWConnectionInfo rowConnectionInfo(){
-        return new ROWConnectionInfo(nodeProperties.getHost(), nodeProperties.getPort(), Arrays.asList(env.getActiveProfiles()).contains("ssl"));
-    }
+
 
     @ConditionalOnMissingBean(ObjectMapper.class)
     @Bean
@@ -88,17 +88,30 @@ public class EleuthConfiguration {
         return new KeyService(configProperties, userIdGenerator);
     }
 
-    @Bean
+    @Bean("keyStoreService")
     @DependsOn({"keyService", "cnGenerator"})
     public KeyStoreService keyStoreService(KeyService keyService, CNGenerator cnGenerator){
         return new KeyStoreService(configProperties, keyService, cnGenerator);
     }
 
-    @Bean
+    @Bean("keyStoreWrapper")
     @DependsOn("keyStoreService")
     public KeyStoreWrapper keyStoreWrapper(KeyStoreService keyStoreService){
         KeyStore keyStore = keyStoreService.generateKeyStore();
         return new KeyStoreWrapper(keyStore, keyStoreService.getKeystoreAddress(), configProperties.getKeyStorePass());
+    }
+
+    @Bean("rowConnectionInfo")
+    @DependsOn("keyStoreWrapper")
+    public ROWConnectionInfo rowConnectionInfo(KeyStoreWrapper keyStoreWrapper) throws KeyStoreException, CertificateEncodingException {
+        Certificate certificate = keyStoreWrapper.getCertificate("main");
+
+        return ROWConnectionInfo.builder()
+                .ssl(Arrays.asList(env.getActiveProfiles()).contains("ssl"))
+                .port(nodeProperties.getPort())
+                .address(nodeProperties.getHost())
+                .certificate(Base64Util.encode(certificate.getEncoded()))
+                .build();
     }
 
     @Bean

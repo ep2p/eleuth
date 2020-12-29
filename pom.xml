@@ -99,6 +99,12 @@
 			<version>30.0-jre</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.cryptacular/cryptacular -->
+		<dependency>
+			<groupId>org.cryptacular</groupId>
+			<artifactId>cryptacular</artifactId>
+			<version>1.2.4</version>
+		</dependency>
 
 	</dependencies>
 

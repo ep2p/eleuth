@@ -20,7 +20,6 @@ import lab.idioglossia.row.client.model.RowRequest;
 import lab.idioglossia.row.client.model.RowResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -30,7 +29,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 //Kademlia NodeConnectionApi implementation to send requests to other Ring nodes
-@Service("rowNodeConnectionApi")
 @Slf4j
 public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWConnectionInfo> {
     private final RowConnectionPool rowConnectionPool;
@@ -38,7 +36,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
     private final SignedRingProofProvider signedRingProofProvider;
     private final NodeValidatorService nodeValidatorService;
 
-    @Autowired
+
     public ROWNodeConnectionApi(RowConnectionPool rowConnectionPool, SignedNodeDtoProvider signedNodeDtoProvider, SignedRingProofProvider signedRingProofProvider, NodeValidatorService nodeValidatorService) {
         this.rowConnectionPool = rowConnectionPool;
         this.signedNodeDtoProvider = signedNodeDtoProvider;

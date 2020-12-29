@@ -8,12 +8,12 @@ import com.github.ep2p.eleuth.service.MessageSignatureService;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
 import com.github.ep2p.eleuth.util.Pipeline;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 //todo: ProxyAsyncRouteHandler & RingAsyncRouteHandler have a lot of similar behaviors. Move them to an abstract class
 @Service
-@Log4j2
+@Slf4j
 public class ProxyAsyncRouteHandler extends AbstractRouteHandler implements AsyncRouteHandler {
     private final Pipeline<AvailabilityMessage, AvailabilityOutput> availabilityPipeline;
     private final RouteMessageSender<ROWConnectionInfo> routeMessageSender;
