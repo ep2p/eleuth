@@ -35,7 +35,7 @@ public class NodeAndCertificateValidatorUtil {
         return generatedNodeId.equals(nodeId);
     }
 
-    public boolean validateCertificate(Certificate encodedCertificate) throws CertificateException {
+    public boolean validateCertificate(Certificate encodedCertificate) {
         String cn = CertificateUtil.getCN(encodedCertificate);
         if(cn.equals("main")){
             return false;
