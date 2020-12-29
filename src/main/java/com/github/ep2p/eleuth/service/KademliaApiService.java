@@ -27,7 +27,7 @@ import java.util.Date;
 @Service
 @ConditionalOnRing
 @Slf4j
-public class KademliaApiService {
+public class KademliaApiService implements KademliaApi {
     private final KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> kademliaNode;
     private final NodeValidatorService nodeValidatorService;
     private final SignedRingProofProvider signedRingProofProvider;
