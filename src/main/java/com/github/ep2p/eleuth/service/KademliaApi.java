@@ -2,7 +2,7 @@ package com.github.ep2p.eleuth.service;
 
 import com.github.ep2p.eleuth.model.dto.kademlia.*;
 
-interface KademliaApi {
+public interface KademliaApi {
     PingResponse onPing(BasicRequest basicRequest);
     BasicResponse store(StoreRequest storeRequest);
     BasicResponse onShutdownSignal(BasicRequest basicRequest);

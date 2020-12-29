@@ -5,9 +5,7 @@ import com.github.ep2p.eleuth.model.entity.Key;
 import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.repository.EleuthKademliaRepository;
 import com.github.ep2p.eleuth.repository.RoutingTableLoader;
-import com.github.ep2p.eleuth.service.CertificateCollectorNodeConnectionApiDecorator;
-import com.github.ep2p.eleuth.service.EleuthKademliaRepositoryNode;
-import com.github.ep2p.eleuth.service.NodeValidatorService;
+import com.github.ep2p.eleuth.service.*;
 import com.github.ep2p.eleuth.service.provider.SignedNodeDtoProvider;
 import com.github.ep2p.eleuth.service.provider.SignedRingProofProvider;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
@@ -17,6 +15,7 @@ import com.github.ep2p.encore.helper.KeyStoreWrapper;
 import com.github.ep2p.encore.key.UserIdGenerator;
 import com.github.ep2p.kademlia.connection.NodeConnectionApi;
 import com.github.ep2p.kademlia.node.KademliaNode;
+import com.github.ep2p.kademlia.node.KademliaSyncRepositoryNode;
 import com.github.ep2p.kademlia.node.RedistributionKademliaNodeListener;
 import com.github.ep2p.kademlia.table.BigIntegerRoutingTable;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +72,13 @@ public class KademliaConfiguration {
         node.start();
         this.kademliaNode = node;
         return node;
+    }
+
+    @Bean("kademliaApi")
+    @DependsOn({"kademliaNode", "nodeValidatorService", "signedRingProofProvider", "signedNodeDtoProvider"})
+    public KademliaApi kademliaApi(UserIdGenerator<BigInteger> userIdGenerator, KeyStoreWrapper keyStoreWrapper, EleuthKademliaRepositoryNode kademliaNode, NodeValidatorService nodeValidatorService, SignedRingProofProvider signedRingProofProvider, SignedNodeDtoProvider signedNodeDtoProvider){
+        KademliaApiService kademliaApiService = new KademliaApiService(kademliaNode, nodeValidatorService, signedRingProofProvider, signedNodeDtoProvider);
+        return new CertificateCollectorKademliaApiDecorator(kademliaApiService, userIdGenerator, keyStoreWrapper);
     }
 
     @PreDestroy

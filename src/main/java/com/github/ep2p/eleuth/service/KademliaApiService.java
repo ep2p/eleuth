@@ -23,9 +23,9 @@ import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.util.Date;
 
+import static com.github.ep2p.eleuth.util.NodeUtil.getNodeFromDto;
+
 //redirects kademlia api inputs to the kademlia node
-@Service
-@ConditionalOnRing
 @Slf4j
 public class KademliaApiService implements KademliaApi {
     private final KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> kademliaNode;
@@ -35,7 +35,7 @@ public class KademliaApiService implements KademliaApi {
     private SignedData<NodeDto> nodeDto;
     private SignedData<RingMemberProofDto> ringProof;
 
-    @Autowired
+
     public KademliaApiService(KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> kademliaNode, NodeValidatorService nodeValidatorService, SignedRingProofProvider signedRingProofProvider, SignedNodeDtoProvider signedNodeDtoProvider) {
         this.kademliaNode = kademliaNode;
         this.nodeValidatorService = nodeValidatorService;
@@ -49,9 +49,6 @@ public class KademliaApiService implements KademliaApi {
         this.ringProof = signedRingProofProvider.getRingProof();
     }
 
-    private Node<BigInteger, ROWConnectionInfo> getNodeFromDto(NodeDto nodeDto){
-        return new Node<BigInteger, ROWConnectionInfo>(nodeDto.getId(), nodeDto.getConnectionInfo(), new Date());
-    }
 
     public PingResponse onPing(BasicRequest basicRequest){
         try {
