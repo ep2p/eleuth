@@ -11,7 +11,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-//todo: ProxyAsyncRouteHandler & RingAsyncRouteHandler have a lot of similar behaviors. Move them to an abstract class
 @Service
 @Slf4j
 public class ProxyAsyncRouteHandler extends AbstractRouteHandler implements AsyncRouteHandler {
