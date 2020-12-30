@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
+import java.math.BigInteger;
+
 //handles Eleuth routed messages
 @Service
 @Slf4j
@@ -54,7 +57,9 @@ public class RouteApiService {
         replyMessage.setBody(signedData);
 
         if (cachedAvailabilityMessage.getMessage().getRoute() == null) {
-            //todo: forward reply to the client!
+            //forwarding reply to requester client node
+            @NotNull BigInteger nodeId = cachedAvailabilityMessage.getMessage().getBody().getData().getNodeId();
+            routeMessageSender.sendAvailabilityReply(nodeId.toString(), availabilityReply);
         }else {
             //forwarding reply to requester proxy
             SignedData<NodeDto> route = cachedAvailabilityMessage.getMessage().getRoute();
