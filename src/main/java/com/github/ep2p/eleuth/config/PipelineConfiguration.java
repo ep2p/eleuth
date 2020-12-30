@@ -10,6 +10,7 @@ import com.github.ep2p.eleuth.service.EleuthKademliaRepositoryNode;
 import com.github.ep2p.eleuth.service.MessageSignatureService;
 import com.github.ep2p.eleuth.service.RequestCacheService;
 import com.github.ep2p.eleuth.service.provider.SignedNodeDtoProvider;
+import com.github.ep2p.eleuth.service.row.RowConnectionMapper;
 import com.github.ep2p.eleuth.service.stage.*;
 import com.github.ep2p.eleuth.util.Pipeline;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,11 @@ public class PipelineConfiguration {
     private final SignedNodeDtoProvider signedNodeDtoProvider;
     private final ObjectMapper objectMapper;
     private final NodeConnectionRepository nodeConnectionRepository;
+    private final RowConnectionMapper rowConnectionMapper;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    public PipelineConfiguration(NodeInformation nodeInformation, Validator validator, MessageSignatureService messageSignatureService, RequestCacheService requestCacheService, EleuthKademliaRepositoryNode kademliaNode, SignedNodeDtoProvider signedNodeDtoProvider, NodeConnectionRepository nodeConnectionRepository, ObjectMapper objectMapper, ApplicationEventPublisher applicationEventPublisher) {
+    public PipelineConfiguration(NodeInformation nodeInformation, Validator validator, MessageSignatureService messageSignatureService, RequestCacheService requestCacheService, EleuthKademliaRepositoryNode kademliaNode, SignedNodeDtoProvider signedNodeDtoProvider, NodeConnectionRepository nodeConnectionRepository, ObjectMapper objectMapper, RowConnectionMapper rowConnectionMapper, ApplicationEventPublisher applicationEventPublisher) {
         this.nodeInformation = nodeInformation;
         this.validator = validator;
         this.messageSignatureService = messageSignatureService;
@@ -41,6 +43,7 @@ public class PipelineConfiguration {
         this.signedNodeDtoProvider = signedNodeDtoProvider;
         this.nodeConnectionRepository = nodeConnectionRepository;
         this.objectMapper = objectMapper;
+        this.rowConnectionMapper = rowConnectionMapper;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -48,7 +51,7 @@ public class PipelineConfiguration {
     @Bean("availabilityPipeline")
     public Pipeline<AvailabilityMessage, AvailabilityOutput> availabilityPipeline(){
         Pipeline<AvailabilityMessage, AvailabilityOutput> pipeline = new Pipeline<>();
-        pipeline.addStage(new AvailabilityVerificationStage(validator, messageSignatureService));
+        pipeline.addStage(new AvailabilityVerificationStage(validator, messageSignatureService, nodeInformation));
 
         if (nodeInformation.getNodeType().equals(NodeType.RING)) {
             pipeline
@@ -57,6 +60,7 @@ public class PipelineConfiguration {
                     .addStage(new AvailabilityStoreStage(kademliaNode, signedNodeDtoProvider, objectMapper));
         }else {
             pipeline
+                    .addStage(new AvailabilityConnectionMapperStage(rowConnectionMapper))
                     .addStage(new AvailabilityRequestCacheStage(requestCacheService))
                     .addStage(new AvailabilityDistributionStage(nodeConnectionRepository, applicationEventPublisher, signedNodeDtoProvider));
         }

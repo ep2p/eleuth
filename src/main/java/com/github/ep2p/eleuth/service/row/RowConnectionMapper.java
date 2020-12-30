@@ -5,8 +5,10 @@ import com.github.ep2p.eleuth.repository.memory.NodeSessionRepository;
 import lab.idioglossia.row.server.context.RowContext;
 import lab.idioglossia.row.server.context.RowContextHolder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
+@Service
 public class RowConnectionMapper {
     private final NodeSessionRepository nodeSessionRepository;
 
@@ -14,7 +16,7 @@ public class RowConnectionMapper {
         this.nodeSessionRepository = nodeSessionRepository;
     }
 
-    protected void addMapping(String nodeId){
+    public void addMapping(String nodeId){
         try {
             RowContext context = RowContextHolder.getContext();
             if(context.isRowRequest()){
