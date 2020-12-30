@@ -19,7 +19,6 @@ import lab.idioglossia.row.client.callback.ResponseCallback;
 import lab.idioglossia.row.client.model.RowRequest;
 import lab.idioglossia.row.client.model.RowResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.math.BigInteger;

@@ -1,6 +1,7 @@
 package com.github.ep2p.eleuth.model.dto.route;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 

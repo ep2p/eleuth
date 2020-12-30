@@ -1,7 +1,5 @@
 package com.github.ep2p.eleuth.service.route;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.ep2p.eleuth.model.dto.api.BaseResponse;
 import com.github.ep2p.eleuth.model.dto.route.AvailabilityMessage;
 import com.github.ep2p.eleuth.model.dto.route.AvailabilityReply;

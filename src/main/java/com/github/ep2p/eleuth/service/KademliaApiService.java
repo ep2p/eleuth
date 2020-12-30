@@ -1,6 +1,5 @@
 package com.github.ep2p.eleuth.service;
 
-import com.github.ep2p.eleuth.config.annotation.ConditionalOnRing;
 import com.github.ep2p.eleuth.exception.InvalidSignatureException;
 import com.github.ep2p.eleuth.model.dto.NodeDto;
 import com.github.ep2p.eleuth.model.dto.RingMemberProofDto;
@@ -14,14 +13,10 @@ import com.github.ep2p.kademlia.exception.NodeIsOfflineException;
 import com.github.ep2p.kademlia.model.FindNodeAnswer;
 import com.github.ep2p.kademlia.model.PingAnswer;
 import com.github.ep2p.kademlia.node.KademliaSyncRepositoryNode;
-import com.github.ep2p.kademlia.node.Node;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
-import java.util.Date;
 
 import static com.github.ep2p.eleuth.util.NodeUtil.getNodeFromDto;
 

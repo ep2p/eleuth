@@ -1,7 +1,7 @@
 package com.github.ep2p.eleuth.model.dto.route;
 
-import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.dto.NodeDto;
+import com.github.ep2p.eleuth.model.dto.SignedData;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

@@ -3,7 +3,6 @@ package com.github.ep2p.eleuth.service.listener;
 import com.github.ep2p.eleuth.model.event.AvailabilityPublishEvent;
 import com.github.ep2p.eleuth.service.route.RouteMessageSender;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
-import com.github.ep2p.eleuth.service.row.RowConnectionPool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
