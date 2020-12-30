@@ -19,7 +19,7 @@ import java.util.HashMap;
         basePackages = "com.github.ep2p.eleuth.repository.memory",
         entityManagerFactoryRef = "h2InMemoryEntityManager",
         transactionManagerRef = "h2InMemoryTransactionManager")
-public class InMemoryH2Configuration {
+public class H2InMemoryConfiguration {
 
     @Bean("h2InMemoryDataSource")
     public DataSource h2InMemoryDataSource() {
