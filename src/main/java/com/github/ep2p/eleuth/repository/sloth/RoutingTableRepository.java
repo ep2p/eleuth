@@ -1,6 +1,6 @@
-package com.github.ep2p.eleuth.repository;
+package com.github.ep2p.eleuth.repository.sloth;
 
-import com.github.ep2p.eleuth.model.entity.RoutingTableEntity;
+import com.github.ep2p.eleuth.model.entity.file.RoutingTableEntity;
 
 public interface RoutingTableRepository {
     boolean existsByUniqueIsTrue();

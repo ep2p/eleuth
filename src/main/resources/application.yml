@@ -13,18 +13,18 @@ node:
   ssl: false
 row:
   client:
-    enable: true
+    enable: on
     ws:
       maximum-session-idle: 120000
     type: spring
-  enable: true
+  enable: on
   ws:
-    enable: true
+    enable: on
     maximum-session-idle: 120000
 spring:
   h2:
     console:
-      enabled: true
+      enabled: on
       settings:
         web-admin-password: password
   datasource:

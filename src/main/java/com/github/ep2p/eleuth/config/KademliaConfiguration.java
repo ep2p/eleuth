@@ -4,7 +4,7 @@ import com.github.ep2p.eleuth.config.annotation.ConditionalOnRing;
 import com.github.ep2p.eleuth.model.entity.Key;
 import com.github.ep2p.eleuth.node.NodeInformation;
 import com.github.ep2p.eleuth.repository.EleuthKademliaRepository;
-import com.github.ep2p.eleuth.repository.RoutingTableLoader;
+import com.github.ep2p.eleuth.repository.RoutingTableManager;
 import com.github.ep2p.eleuth.service.*;
 import com.github.ep2p.eleuth.service.provider.SignedNodeDtoProvider;
 import com.github.ep2p.eleuth.service.provider.SignedRingProofProvider;
@@ -15,7 +15,6 @@ import com.github.ep2p.encore.helper.KeyStoreWrapper;
 import com.github.ep2p.encore.key.UserIdGenerator;
 import com.github.ep2p.kademlia.connection.NodeConnectionApi;
 import com.github.ep2p.kademlia.node.KademliaNode;
-import com.github.ep2p.kademlia.node.KademliaSyncRepositoryNode;
 import com.github.ep2p.kademlia.node.RedistributionKademliaNodeListener;
 import com.github.ep2p.kademlia.table.BigIntegerRoutingTable;
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +30,12 @@ import java.math.BigInteger;
 @ConditionalOnRing
 @Slf4j
 public class KademliaConfiguration {
-    private final RoutingTableLoader routingTableLoader;
+    private final RoutingTableManager routingTableManager;
     private final EleuthKademliaRepository kademliaRepository;
     private KademliaNode<BigInteger, ROWConnectionInfo> kademliaNode;
 
-    public KademliaConfiguration(RoutingTableLoader routingTableLoader, EleuthKademliaRepository kademliaRepository) {
-        this.routingTableLoader = routingTableLoader;
+    public KademliaConfiguration(RoutingTableManager routingTableManager, EleuthKademliaRepository kademliaRepository) {
+        this.routingTableManager = routingTableManager;
         this.kademliaRepository = kademliaRepository;
     }
 
@@ -45,7 +44,7 @@ public class KademliaConfiguration {
     @Bean("routingTable")
     @DependsOn("nodeInformation")
     public BigIntegerRoutingTable<ROWConnectionInfo> routingTable(NodeInformation nodeInformation){
-        BigIntegerRoutingTable<ROWConnectionInfo> bigIntegerRoutingTable = routingTableLoader.get();
+        BigIntegerRoutingTable<ROWConnectionInfo> bigIntegerRoutingTable = routingTableManager.get();
         if(bigIntegerRoutingTable != null)
             return bigIntegerRoutingTable;
 
@@ -85,7 +84,7 @@ public class KademliaConfiguration {
     public void onDestroy(){
         if(this.kademliaNode != null){
             BigIntegerRoutingTable<ROWConnectionInfo> routingTable = (BigIntegerRoutingTable<ROWConnectionInfo>) this.kademliaNode.getRoutingTable();
-            routingTableLoader.store(routingTable);
+            routingTableManager.store(routingTable);
         }
     }
 

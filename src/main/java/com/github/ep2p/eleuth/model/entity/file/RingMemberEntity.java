@@ -1,4 +1,4 @@
-package com.github.ep2p.eleuth.model.entity;
+package com.github.ep2p.eleuth.model.entity.file;
 
 import lab.idioglossia.jsonsloth.JsonSlothEntity;
 import lab.idioglossia.jsonsloth.JsonSlothId;

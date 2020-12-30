@@ -1,7 +1,6 @@
 package com.github.ep2p.eleuth.repository.sloth;
 
-import com.github.ep2p.eleuth.model.entity.RoutingTableEntity;
-import com.github.ep2p.eleuth.repository.RoutingTableRepository;
+import com.github.ep2p.eleuth.model.entity.file.RoutingTableEntity;
 import lab.idioglossia.sloth.collection.Collection;
 import lab.idioglossia.sloth.collection.Value;
 import lab.idioglossia.sloth.storage.SlothStorage;

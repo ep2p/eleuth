@@ -1,4 +1,4 @@
-package com.github.ep2p.eleuth.model.entity;
+package com.github.ep2p.eleuth.model.entity.file;
 
 import lombok.*;
 
@@ -7,20 +7,20 @@ import java.math.BigInteger;
 import java.util.Date;
 
 @Entity
-@Table(name = "node_informations", indexes = {
-        @Index(columnList = "nodeId")
+@Table(name = "messages", indexes = {
+        @Index(columnList = "receiver,creationDate")
 })
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NodeInformationEntity {
+public class MessageEntity {
     @Id
     @GeneratedValue
     private Long id;
     private Date creationDate;
-    private BigInteger nodeId;
+    private BigInteger receiver;
     private byte[] data;
     @Builder.Default
     private int version = 1;

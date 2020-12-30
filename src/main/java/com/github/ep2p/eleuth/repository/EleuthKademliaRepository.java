@@ -5,7 +5,8 @@ import com.github.ep2p.eleuth.model.dto.NodeDto;
 import com.github.ep2p.eleuth.model.dto.SignedData;
 import com.github.ep2p.eleuth.model.entity.Key;
 import com.github.ep2p.eleuth.model.entity.NodeInfoStoreValue;
-import com.github.ep2p.eleuth.model.entity.NodeInformationEntity;
+import com.github.ep2p.eleuth.model.entity.file.NodeInformationEntity;
+import com.github.ep2p.eleuth.repository.file.NodeInformationRepository;
 import com.github.ep2p.encore.helper.Serializer;
 import com.github.ep2p.kademlia.node.KademliaRepository;
 import lombok.SneakyThrows;
@@ -13,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 

@@ -5,7 +5,7 @@ import com.github.ep2p.eleuth.model.AvailabilityOutput;
 import com.github.ep2p.eleuth.model.NodeType;
 import com.github.ep2p.eleuth.model.dto.route.AvailabilityMessage;
 import com.github.ep2p.eleuth.node.NodeInformation;
-import com.github.ep2p.eleuth.repository.NodeConnectionRepository;
+import com.github.ep2p.eleuth.repository.file.NodeConnectionRepository;
 import com.github.ep2p.eleuth.service.EleuthKademliaRepositoryNode;
 import com.github.ep2p.eleuth.service.MessageSignatureService;
 import com.github.ep2p.eleuth.service.RequestCacheService;

@@ -1,8 +1,8 @@
 package com.github.ep2p.eleuth.service;
 
-import com.github.ep2p.eleuth.model.entity.RingMemberEntity;
+import com.github.ep2p.eleuth.model.entity.file.RingMemberEntity;
 import com.github.ep2p.eleuth.node.NodeInformation;
-import com.github.ep2p.eleuth.repository.RingMemberRepository;
+import com.github.ep2p.eleuth.repository.sloth.RingMemberRepository;
 import com.github.ep2p.eleuth.util.Base64Util;
 import com.github.ep2p.encore.key.*;
 import lombok.extern.slf4j.Slf4j;

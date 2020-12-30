@@ -1,13 +1,10 @@
-package com.github.ep2p.eleuth.model.entity;
+package com.github.ep2p.eleuth.model.entity.file;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
-@Entity
-@Table(name = "routing_table", indexes = {
-        @Index(columnList = "unique")
-})
 @Getter
 @Setter
 @AllArgsConstructor

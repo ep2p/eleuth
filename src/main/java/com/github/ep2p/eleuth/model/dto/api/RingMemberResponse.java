@@ -1,6 +1,6 @@
 package com.github.ep2p.eleuth.model.dto.api;
 
-import com.github.ep2p.eleuth.model.entity.RingMemberEntity;
+import com.github.ep2p.eleuth.model.entity.file.RingMemberEntity;
 import lombok.Getter;
 import lombok.Setter;
 

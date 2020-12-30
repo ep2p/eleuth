@@ -1,8 +1,11 @@
-package com.github.ep2p.eleuth.model.entity;
+package com.github.ep2p.eleuth.model.entity.file;
 
 import com.github.ep2p.eleuth.model.NodeType;
 import com.github.ep2p.eleuth.service.row.ROWConnectionInfo;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -25,7 +28,5 @@ public class NodeConnectionEntity extends ROWConnectionInfo {
     private BigInteger nodeId;
     private Date lastUpdate;
     private NodeType nodeType;
-    private String sessionId;
-    private String userId;
     private String ringKey;
 }

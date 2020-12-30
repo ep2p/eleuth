@@ -2,7 +2,7 @@ package com.github.ep2p.eleuth.controller;
 
 import com.github.ep2p.eleuth.model.dto.api.BaseResponse;
 import com.github.ep2p.eleuth.model.dto.api.RingMemberResponse;
-import com.github.ep2p.eleuth.model.entity.RingMemberEntity;
+import com.github.ep2p.eleuth.model.entity.file.RingMemberEntity;
 import com.github.ep2p.eleuth.service.RingKeyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

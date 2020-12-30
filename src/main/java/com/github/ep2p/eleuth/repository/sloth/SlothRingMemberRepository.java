@@ -1,7 +1,6 @@
 package com.github.ep2p.eleuth.repository.sloth;
 
-import com.github.ep2p.eleuth.model.entity.RingMemberEntity;
-import com.github.ep2p.eleuth.repository.RingMemberRepository;
+import com.github.ep2p.eleuth.model.entity.file.RingMemberEntity;
 import lab.idioglossia.jsonsloth.JsonSlothManager;
 import org.springframework.stereotype.Repository;
 

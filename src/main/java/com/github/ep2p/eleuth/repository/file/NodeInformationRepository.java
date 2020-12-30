@@ -1,6 +1,6 @@
-package com.github.ep2p.eleuth.repository;
+package com.github.ep2p.eleuth.repository.file;
 
-import com.github.ep2p.eleuth.model.entity.NodeInformationEntity;
+import com.github.ep2p.eleuth.model.entity.file.NodeInformationEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigInteger;
