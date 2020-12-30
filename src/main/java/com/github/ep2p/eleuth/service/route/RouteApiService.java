@@ -20,7 +20,7 @@ import java.math.BigInteger;
 //handles Eleuth routed messages
 @Service
 @Slf4j
-public class RouteApiService {
+public class RouteApiService implements RouteApi {
     private final AsyncRouteHandler asyncRouteHandler;
     private final RequestCacheService requestCacheService;
     private final MessageSignatureService messageSignatureService;
