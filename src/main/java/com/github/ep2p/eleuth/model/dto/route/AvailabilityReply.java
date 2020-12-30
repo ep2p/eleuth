@@ -12,6 +12,10 @@ import java.util.List;
 @Setter
 public class AvailabilityReply extends ProtocolResponse<AvailabilityReply.AvailabilityReplyMessage> {
 
+    public AvailabilityReply() {
+        super(ProtocolMessage.Type.AVAILABLE);
+    }
+
     @Getter
     @Setter
     @AllArgsConstructor
