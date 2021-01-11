@@ -5,6 +5,7 @@ import com.github.ep2p.eleuth.repository.memory.NodeSessionRepository;
 import lab.idioglossia.row.server.context.RowContext;
 import lab.idioglossia.row.server.context.RowContextHolder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -26,8 +27,8 @@ public class RowConnectionMapper {
                         .userId(context.getRowUser().getUserId())
                         .build());
             }
-        }catch (Exception e){
-            log.error("Could not map node to session", e);
+        }catch (DataIntegrityViolationException e){
+            log.trace("Session is already mapped. Skipping");
         }
     }
 }
