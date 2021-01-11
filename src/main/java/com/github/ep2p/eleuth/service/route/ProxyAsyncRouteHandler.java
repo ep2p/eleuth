@@ -31,7 +31,7 @@ public class ProxyAsyncRouteHandler extends AbstractRouteHandler implements Asyn
         availabilityPipeline.run(availabilityMessage, output);
         if(output.isFailed()){
             SignedData<NodeDto> route = availabilityMessage.getMessage().getRoute();
-            routeMessageSender.sendAvailabilityReply(route.getData().getId().toString(), route.getData().getConnectionInfo(), getAvailabilityResponse(availabilityMessage, output));
+            routeMessageSender.sendAvailabilityReply(route.getData().getId().toString(), route.getData().getConnectionInfo(), getAvailabilityResponse(availabilityMessage, output, false));
         }
     }
 

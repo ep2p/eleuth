@@ -13,10 +13,10 @@ public abstract class AbstractRouteHandler {
         this.messageSignatureService = messageSignatureService;
     }
 
-    protected AvailabilityReply getAvailabilityResponse(AvailabilityMessage availabilityMessage, AvailabilityOutput output) {
+    protected AvailabilityReply getAvailabilityResponse(AvailabilityMessage availabilityMessage, AvailabilityOutput output, boolean hit) {
         AvailabilityReply.AvailabilityReplyBody availabilityReplyBody = new AvailabilityReply.AvailabilityReplyBody();
         availabilityReplyBody.setStatus(output.isFailed() ? BaseResponse.Status.FAIL : BaseResponse.Status.SUCCESS);
-        availabilityReplyBody.setHit(false);
+        availabilityReplyBody.setHit(hit);
         availabilityReplyBody.setErrors(output.getErrorMessages());
         availabilityReplyBody.setRequestId(availabilityMessage.getMessage().getBody().getData().getRequestId());
 

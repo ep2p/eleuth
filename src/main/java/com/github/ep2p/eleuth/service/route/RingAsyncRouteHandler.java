@@ -41,8 +41,7 @@ public class RingAsyncRouteHandler extends AbstractRouteHandler implements Async
     }
 
     protected AvailabilityReply getAvailabilityResponse(AvailabilityMessage availabilityMessage, AvailabilityOutput output) {
-        AvailabilityReply availabilityResponse = super.getAvailabilityResponse(availabilityMessage, output);
-        availabilityResponse.getReply().getBody().getData().setHit(true);
+        AvailabilityReply availabilityResponse = super.getAvailabilityResponse(availabilityMessage, output, true);
         availabilityResponse.getReply().setRingProof(signedRingProofProvider.getRingProof());
         return availabilityResponse;
     }
