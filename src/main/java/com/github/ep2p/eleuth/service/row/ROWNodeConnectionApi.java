@@ -131,7 +131,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<BigInteger, ROWCo
         return responseAtomicAnswer.get();
     }
 
-    //not async yet
+    //todo: make async
     @Override
     public <K, V> void storeAsync(Node<BigInteger, ROWConnectionInfo> caller, Node<BigInteger, ROWConnectionInfo> requester, Node<BigInteger, ROWConnectionInfo> node, K key, V value) {
         StoreRequest storeRequest = new StoreRequest(signedNodeDtoProvider.getWithCertificate(), signedRingProofProvider.getRingProof(), requester);

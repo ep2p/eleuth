@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 //Only on RING nodes, calls store method on kademlia node to store Availability message
 @Slf4j
@@ -38,12 +39,13 @@ public class AvailabilityStoreStage implements Pipeline.Stage<AvailabilityMessag
                             .type(Key.Type.NODE_INFO)
                             .id(availabilityMessage.getMessage().getBody().getData().getNodeId().toString())
                             .build(),
-                            getValue(availabilityMessage)
+                            getValue(availabilityMessage),
+                            1, TimeUnit.MINUTES
                     );
             if (!storeAnswer.getResult().equals(StoreAnswer.Result.STORED)) {
                 throw new StoreException();
             }
-        } catch (StoreException | JsonProcessingException e) {
+        } catch (StoreException | JsonProcessingException | InterruptedException e) {
             o.setFailed(true);
             o.getErrorMessages().add("Failed to store data");
             log.error("Failed to store data", e);

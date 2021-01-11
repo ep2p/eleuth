@@ -12,6 +12,7 @@ import com.github.ep2p.kademlia.table.Bucket;
 import com.github.ep2p.kademlia.table.RoutingTable;
 
 import java.math.BigInteger;
+import java.util.concurrent.TimeUnit;
 
 //Eleuth implementation of KademliaRepositoryNode which overrides storing methods behavior based on input key type
 public class EleuthKademliaRepositoryNode extends KademliaSyncRepositoryNode<BigInteger, ROWConnectionInfo, Key, String> {
@@ -23,7 +24,7 @@ public class EleuthKademliaRepositoryNode extends KademliaSyncRepositoryNode<Big
 
     //the difference here is that we are storing NODE_INFO messages no matter what, and then passing it to other nodes if current node is not the closest node to key
     @Override
-    public StoreAnswer<BigInteger, Key> store(Key key, String value) throws StoreException {
+    public StoreAnswer<BigInteger, Key> store(Key key, String value, long timeout, TimeUnit timeUnit) throws StoreException, InterruptedException {
         if(!isRunning())
             throw new StoreException("Node is shutting down");
         StoreAnswer<BigInteger, Key> storeAnswer = null;
@@ -37,7 +38,7 @@ public class EleuthKademliaRepositoryNode extends KademliaSyncRepositoryNode<Big
 
         if(getId().equals(hash)) {
             if(!stored){
-                getKademliaRepository().store(key, value);
+                super.store(key, value, timeout, timeUnit);
             }
             storeAnswer = getNewStoreAnswer(key, StoreAnswer.Result.STORED, this);
         }else {
